@@ -5,6 +5,7 @@ public class Student extends User {
     private Set<String> courses;
 
     public Student() {
+        super();
     }
 
     public Student(String firstName, String lastName, String email, String password) {
@@ -22,8 +23,5 @@ public class Student extends User {
     public void dropCourse(String course) {
         courses.remove(course);
     }
-
-
-
 
 }
