@@ -4,32 +4,32 @@
 ## TODO List
 
 ### General Setup
-- [ ] Set up the basic project structure
-- [ ] Implement user authentication system (login/signup)
-- [ ] Create a menu-driven interface for the application
+- [x] Set up the basic project structure
+- [x] Implement user authentication system (login/signup)
+- [x] Create a menu-driven interface for the application
 
 ### Student Functionalities
-- [ ] Implement view available courses feature
-- [ ] Develop course registration system
-  - [ ] Include prerequisite checking
-  - [ ] Implement semester selection
-  - [ ] Enforce credit limit (20 credits)
+- [x] Implement view available courses feature
+- [x] Develop course registration system
+  - [x] Include prerequisite checking
+  - [x] Implement semester selection
+  - [x] Enforce credit limit (20 credits)
 - [ ] Create view schedule functionality
 - [ ] Implement academic progress tracking
   - [ ] Calculate SGPA and CGPA
-- [ ] Add course dropping feature
-- [ ] Develop complaint submission system
+- [x] Add course dropping feature
+- [x] Develop complaint submission system
 
 ### Professor Functionalities
-- [ ] Implement course management system
-  - [ ] Allow updating course details (syllabus, timings, credits, etc.)
-- [ ] Create view enrolled students feature
+- [x] Implement course management system
+  - [x] Allow updating course details (syllabus, timings, credits, etc.)
+- [x] Create view enrolled students feature
 
 ### Administrator Functionalities
-- [ ] Develop course catalog management system
-- [ ] Implement student records management
-- [ ] Create professor-to-course assignment feature
-- [ ] Develop complaint handling system
+- [x] Develop course catalog management system
+- [x] Implement student records management
+- [x] Create professor-to-course assignment feature
+- [x] Develop complaint handling system
 
 ### UML Diagram
 - [ ] Create UML diagram with proper notation
