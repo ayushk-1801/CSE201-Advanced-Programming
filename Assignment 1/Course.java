@@ -16,6 +16,13 @@ public class Course {
     public Course() {
     }
 
+    public Course(String code, String name, int credits, String professor) {
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.professor = professor;
+    }
+
     public Course(String name, String code, String professor, Set<String> prerequisites, Set<Student> students,
             int studentLimit, int credits, String syllabus, String classTimings) {
         this.name = name;
@@ -105,4 +112,7 @@ public class Course {
         students.add(student);
     }
 
+    public void removeStudent(Student student) {
+        students.remove(student);
+    }
 }
