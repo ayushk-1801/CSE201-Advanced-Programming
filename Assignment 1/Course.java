@@ -69,6 +69,8 @@ public class Course {
 
     @Override
     public String toString() {
-        return courseCode + " - " + courseName + " (" + credits + " credits, Semester " + semester + ")";
+        return String.format("| %-10s | %-52s | %-6d | %-9d | %-16s |",
+                courseCode, courseName, credits, semester,
+                assignedProfessor != null ? assignedProfessor.split(" ")[0] : "N/A");
     }
 }

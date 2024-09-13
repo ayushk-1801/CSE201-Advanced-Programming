@@ -33,22 +33,6 @@ public class Student extends User implements StudentInterface {
         this.scanner = new Scanner(System.in);
     }
 
-    private void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-    private void printHeader(String title) {
-        clearScreen();
-        System.out.println("============================================================================================");
-        System.out.println("                                         " + title);
-        System.out.println("============================================================================================");
-    }
-
-    private void printFooter() {
-        System.out.println("============================================================================================");
-        System.out.print("Press Enter to continue...");
-        scanner.nextLine();
-    }
     public void viewAvailableCourses() {
         Props.printHeader("Available Courses");
         System.out.print("Enter semester (1-8): ");

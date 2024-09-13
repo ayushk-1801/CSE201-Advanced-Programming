@@ -10,13 +10,13 @@ public class Props {
 
     private static Scanner scanner = new Scanner(System.in);
 
-    private static void clearScreen() {
+    public static void clear() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
     public static void printHeader(String title) {
-        clearScreen();
+        clear();
         System.out.println("============================================================================================================");
         System.out.println("                                                " + title);
         System.out.println("============================================================================================================");
@@ -79,7 +79,7 @@ public class Props {
     }
 
     public static void introScreen() {
-        clearScreen();
+        clear();
         System.out.println("   ___                              __            _     _             _   _               __           _                 ");
         System.out.println("  / __\\___  _   _ _ __ ___  ___    /__\\ ___  __ _(_)___| |_ _ __ __ _| |_(_) ___  _ __   / _\\_   _ ___| |_ ___ _ __ ___  ");
         System.out.println(" / /  / _ \\| | | | '__/ __|/ _ \\  / \\/// _ \\/ _` | / __| __| '__/ _` | __| |/ _ \\  '_ \\  \\ \\| | | / __| __/ _ \\ '_ ` _ \\ ");
@@ -91,7 +91,7 @@ public class Props {
     }
 
     public static void exitScreen() {
-        clearScreen();
+        clear();
         System.out.println("\nThank you for using the course registration system. Goodbye!");
         System.exit(0);
     }

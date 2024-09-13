@@ -19,7 +19,7 @@ public class Professor extends User implements ProfessorInterface {
         this.assignedCourses = new ArrayList<>();
     }
 
-    private void clearScreen() {
+    private void clear() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
