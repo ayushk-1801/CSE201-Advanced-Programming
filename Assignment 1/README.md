@@ -40,6 +40,13 @@
   - [ ] Assumptions made
   - [ ] Application of OOP concepts
 
+### Demonstration
+- [x] Prepare demonstration with:
+  - 3 students
+  - 2 professors
+  - 1 administrator
+  - 5 courses
+
 ### Final Checks
 - [ ] Ensure all OOP concepts are applied effectively
 - [ ] Review code for plagiarism
