@@ -10,7 +10,7 @@ public class Main {
         Props.professors = new ArrayList<Professor>();
         Props.admins = new ArrayList<Admin>();
 
-        Admin admin = new Admin("Sudo", "", "admin@iiitd.ac.in", "methhead");
+        Admin admin = new Admin("admin@iiitd.ac.in", "methhead");
         Props.addAdmin(admin);
 
         Professor prof1 = new Professor("Sambuddho", "Chakravarty", "sambuddho@iiitd.ac.in", "sambuddho123");
@@ -18,12 +18,12 @@ public class Main {
         Props.addProfessor(prof1);
         Props.addProfessor(prof2);
 
-        Student student1 = new Student("Arhan", "Jain", "arhan@iiitd.ac.in", "arhan123");
-        Student student2 = new Student("Arnesh", "Batra", "arnesh@iiitd.ac.in", "arnesh2212");
-        Student student3 = new Student("Dev", "Sharma", "dev@iiitd.ac.in", "dev123");
-        Props.addStudent(student1);
-        Props.addStudent(student2);
-        Props.addStudent(student3);
+        Student stud1 = new Student("Arhan", "Jain", "arhan@iiitd.ac.in", "arhan123");
+        Student stud2 = new Student("Arnesh", "Batra", "arnesh@iiitd.ac.in", "arnesh123");
+        Student stud3 = new Student("Dev", "Sharma", "dev@iiitd.ac.in", "dev123");
+        Props.addStudent(stud1);
+        Props.addStudent(stud2);
+        Props.addStudent(stud3);
 
         Props.courses.get(1).add(new Course("CSE101", "Introduction to Programming", 4, "Pankaj Jalote", 1));
         Props.courses.get(1).add(new Course("MTH100", "Linear Algebra", 4, "Subhajit Ghoosechowdhary", 1));
@@ -43,7 +43,6 @@ public class Main {
         Props.courses.get(3).add(new Course("MTH203", "Multivariable Calculus", 4, "Sarthok Sirkar", 3));
         Props.courses.get(3).add(new Course("ECE250", "Signals and Systems", 4, "Anubha Gupta", 3));
 
-        // Start the login process
         Props.introScreen();
         Props.login();
     }

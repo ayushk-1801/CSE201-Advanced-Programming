@@ -1,11 +1,11 @@
 public class Complaint {
     private String complaint;
-    private String emailID;
+    private String email;
     private String status;
 
-    public Complaint(String complaint, String emailID) {
+    public Complaint(String complaint, String email) {
         this.complaint = complaint;
-        this.emailID = emailID;
+        this.email = email;
         this.status = "Pending";
     }
 
@@ -13,8 +13,8 @@ public class Complaint {
         return complaint;
     }
 
-    public String getEmailID() {
-        return emailID;
+    public String getEmail() {
+        return email;
     }
 
     public String getStatus() {

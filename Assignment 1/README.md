@@ -14,9 +14,9 @@
   - [x] Include prerequisite checking
   - [x] Implement semester selection
   - [x] Enforce credit limit (20 credits)
-- [ ] Create view schedule functionality
-- [ ] Implement academic progress tracking
-  - [ ] Calculate SGPA and CGPA
+- [x] Create view schedule functionality
+- [x] Implement academic progress tracking
+  - [x] Calculate SGPA and CGPA
 - [x] Add course dropping feature
 - [x] Develop complaint submission system
 

@@ -1,23 +1,63 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-interface AdminInterface {
-    void manageCoursesCatalog();
-    void manageStudentRecords();
-    void assignProfessorToCourse();
-    void handleComplaints();
+abstract class AdminUser {
+    protected String email;
+    protected String password;
+
+    public AdminUser() {}
+    public AdminUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
-public class Admin extends User implements AdminInterface {
+public class Admin extends AdminUser {
     private ArrayList<Course> courseCatalog;
-    private ArrayList<String> complaints;
     private Scanner scanner;
 
-    public Admin(String firstName, String lastName, String email, String password) {
-        super(firstName, lastName, email, password);
+    public Admin() {
+        super();
         this.courseCatalog = new ArrayList<>();
-        this.complaints = new ArrayList<>();
         this.scanner = new Scanner(System.in);
+    }
+
+    public Admin(String email, String password) {
+        super(email, password);
+        this.courseCatalog = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
+    }
+
+    public ArrayList<Course> getCourseCatalog() {
+        return courseCatalog;
+    }
+
+    public void setCourseCatalog(ArrayList<Course> courseCatalog) {
+        this.courseCatalog = courseCatalog;
+    }
+
+    public Scanner getScanner() {
+        return scanner;
+    }
+
+    public void setScanner(Scanner scanner) {
+        this.scanner = scanner;
     }
 
     public void manageCoursesCatalog() {
@@ -29,7 +69,7 @@ public class Admin extends User implements AdminInterface {
             System.out.println("4. Back to Main Menu");
             System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -56,17 +96,16 @@ public class Admin extends User implements AdminInterface {
         String courseCode = scanner.nextLine();
         System.out.print("Enter course name: ");
         String courseName = scanner.nextLine();
-        System.out.print("Enter credits: ");
-        int credits = scanner.nextInt();
         System.out.print("Enter semester: ");
         int semester = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
+        System.out.print("Enter credits: ");
+        int credits = scanner.nextInt();
+        scanner.nextLine();
         System.out.print("Enter instructor name: ");
         String instructor = scanner.nextLine();
 
         Course newCourse = new Course(courseCode, courseName, credits, instructor, semester);
-        courseCatalog.add(newCourse);
+        Props.getCourses().get(semester).add(newCourse);
         System.out.println("Course added successfully.");
     }
 
@@ -92,12 +131,10 @@ public class Admin extends User implements AdminInterface {
 
         for (Course course : courseCatalog) {
             if (course.getCourseCode().equals(courseCode)) {
-                System.out.print("Enter new credits (or -1 to keep current): ");
+                System.out.print("Enter new credits: ");
                 int newCredits = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-                if (newCredits != -1) {
-                    course.setCredits(newCredits);
-                }
+                scanner.nextLine();
+                course.setCredits(newCredits);
                 System.out.println("Course updated successfully.");
                 return;
             }
@@ -114,7 +151,7 @@ public class Admin extends User implements AdminInterface {
             System.out.println("4. Back to Main Menu");
             System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -153,7 +190,7 @@ public class Admin extends User implements AdminInterface {
 
     private void removeStudent() {
         Props.printHeader("Remove Student");
-        System.out.print("Enter student email to remove: ");
+        System.out.print("Enter student email: ");
         String email = scanner.nextLine();
 
         for (Student student : Props.getStudents()) {
@@ -168,21 +205,17 @@ public class Admin extends User implements AdminInterface {
 
     private void updateStudent() {
         Props.printHeader("Update Student");
-        System.out.print("Enter student email to update: ");
+        System.out.print("Enter student email: ");
         String email = scanner.nextLine();
 
         for (Student student : Props.getStudents()) {
             if (student.getEmail().equals(email)) {
-                System.out.print("Enter new first name (or press Enter to keep current): ");
+                System.out.print("Enter new first name: ");
                 String newFirstName = scanner.nextLine();
-                if (!newFirstName.isEmpty()) {
-                    student.setFirstName(newFirstName);
-                }
-                System.out.print("Enter new last name (or press Enter to keep current): ");
+                student.setFirstName(newFirstName);
+                System.out.print("Enter new last name: ");
                 String newLastName = scanner.nextLine();
-                if (!newLastName.isEmpty()) {
-                    student.setLastName(newLastName);
-                }
+                student.setLastName(newLastName);
                 System.out.println("Student updated successfully.");
                 return;
             }
@@ -207,8 +240,8 @@ public class Admin extends User implements AdminInterface {
             }
         }
 
-        for (ArrayList<Course> semesterCourses : Props.getCourses()) {
-            for (Course c : semesterCourses) {
+        for (ArrayList<Course> semwisecourses : Props.getCourses()) {
+            for (Course c : semwisecourses) {
                 if (c.getCourseCode().equals(courseCode)) {
                     course = c;
                     break;
@@ -236,29 +269,40 @@ public class Admin extends User implements AdminInterface {
         }
 
         while (true) {
-            System.out.println("Complaints:");
+            System.out.println("+----+------------------------------------------------------------------+----------+");
+            System.out.println("| ID | Complaint                                                        | Status   |");
+            System.out.println("+----+------------------------------------------------------------------+----------+");
             for (int i = 0; i < complaints.size(); i++) {
                 Complaint complaint = complaints.get(i);
-                System.out.println((i + 1) + ": " + complaint.getComplaint());
+                System.out.printf("| %-2d | %-80s | %-8s |\n", 
+                    i + 1, 
+                    truncate(complaint.getComplaint(), 80), 
+                    complaint.getStatus());
             }
+            System.out.println("+----+------------------------------------------------------------------+----------+");
+            System.out.print("Enter complaint number to handle (or 'exit' to return): ");
+            String input = scanner.nextLine();
 
-            System.out.print("Enter complaint number to handle (or 0 to exit): ");
-            int complaintNumber = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            if (complaintNumber == 0) {
+            if (input.equalsIgnoreCase("exit")) {
                 break;
             }
 
+            int complaintNumber;
+            try {
+                complaintNumber = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number or 'exit'.");
+                continue;
+            }
             if (complaintNumber > 0 && complaintNumber <= complaints.size()) {
                 Complaint selectedComplaint = complaints.get(complaintNumber - 1);
-                System.out.println("Selected complaint: " + selectedComplaint);
-                System.out.print("Enter new status (Pending/In Progress/Resolved): ");
-                String newStatus = scanner.nextLine();
-                selectedComplaint.setStatus(newStatus);
-                System.out.println("Complaint status updated to: " + newStatus);
+                System.out.println("Selected complaint: " + selectedComplaint.getComplaint());
+                System.out.print("Enter status (Pending/Resolved): ");
+                String status = scanner.nextLine();
+                selectedComplaint.setStatus(status);
+                System.out.println("Complaint status updated to: " + status);
 
-                if (newStatus.equalsIgnoreCase("Resolved")) {
+                if (status.equalsIgnoreCase("Resolved")) {
                     complaints.remove(complaintNumber - 1);
                     System.out.println("Complaint resolved and removed from the list.");
                 }
@@ -266,7 +310,14 @@ public class Admin extends User implements AdminInterface {
                 System.out.println("Invalid complaint number.");
             }
 
-            System.out.println(); // Add a blank line for readability
+            System.out.println();
         }
+    }
+
+    private String truncate(String str, int maxLength) {
+        if (str.length() <= maxLength) {
+            return str;
+        }
+        return str.substring(0, maxLength - 3) + "...";
     }
 }

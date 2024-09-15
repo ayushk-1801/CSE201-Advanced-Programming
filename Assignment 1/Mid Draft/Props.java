@@ -2,44 +2,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Props {
-    public static ArrayList<ArrayList<Course>> courses = new ArrayList<ArrayList<Course>>();
+    public static ArrayList<Admin> admins = new ArrayList<Admin>();
     public static ArrayList<Student> students = new ArrayList<Student>();
     public static ArrayList<Professor> professors = new ArrayList<Professor>();
-    public static ArrayList<Admin> admins = new ArrayList<Admin>();
+    public static ArrayList<ArrayList<Course>> courses = new ArrayList<ArrayList<Course>>();
     public static ArrayList<Complaint> complaints = new ArrayList<Complaint>();
 
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void clear() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-
-    public static void printHeader(String title) {
-        clear();
-        System.out.println("============================================================================================================");
-        System.out.println("                                                " + title);
-        System.out.println("============================================================================================================");
-    }
-
-    public static void printFooter() {
-        System.out.println("============================================================================================================");
-        System.out.print("Press Enter to continue...");
-        scanner.nextLine();
-    }
-
     public static ArrayList<ArrayList<Course>> getCourses() {
         return courses;
-    }
-
-    public static void viewCourses() {
-        printHeader("View Courses");
-        for (ArrayList<Course> semesterCourses : courses) {
-            for (Course course : semesterCourses) {
-                System.out.println(course);
-            }
-        }
-        printFooter();
     }
 
     public static ArrayList<Student> getStudents() {
@@ -52,6 +24,18 @@ public class Props {
 
     public static ArrayList<Admin> getAdmins() {
         return admins;
+    }
+
+    public static ArrayList<Complaint> getComplaints() {
+        return complaints;
+    }
+
+    public static ArrayList<String> getComplaintsList() {
+        ArrayList<String> complaintsList = new ArrayList<>();
+        for (Complaint complaint : complaints) {
+            complaintsList.add(complaint.toString());
+        }
+        return complaintsList;
     }
 
     public static void addStudent(Student student) {
@@ -78,6 +62,39 @@ public class Props {
         courses.get(course.getSemester()).add(course);
     }
 
+    public static void addComplaint(Complaint complaint) {
+        complaints.add(complaint);
+    }
+
+    public static void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public static void printHeader(String title) {
+        clear();
+        System.out.println("============================================================================================================");
+        System.out.println("                                                " + title);
+        System.out.println("============================================================================================================");
+    }
+
+    public static void printFooter() {
+        System.out.println("============================================================================================================");
+        System.out.print("Press Enter to continue...");
+        scanner.nextLine();
+    }
+
+    public static void viewCourses() {
+        printHeader("View Courses");
+        for (ArrayList<Course> semesterCourses : courses) {
+            for (Course course : semesterCourses) {
+                System.out.println(course);
+            }
+        }
+        printFooter();
+    }
+
+    // Screen methods
     public static void introScreen() {
         clear();
         System.out.println("   ___                              __            _     _             _   _               __           _                 ");
@@ -98,48 +115,85 @@ public class Props {
 
     public static void login() {
         while (true) {
-            printHeader("Login");
-            System.out.println("Select user type:");
-            System.out.println("1. Student");
-            System.out.println("2. Professor");
-            System.out.println("3. Admin");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice (1-4): ");
+            printHeader("Login/Signup");
+            System.out.println("Select an option:");
+            System.out.println("1. Login");
+            System.out.println("2. Sign up");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice (1-3): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
+            clear();
 
-            if (choice == 4) {
+            if (choice == 1) {
+                printHeader("Login");   
+                System.out.println("Select user type:");
+                System.out.println("1. Student");
+                System.out.println("2. Professor");
+                System.out.println("3. Admin");
+                System.out.print("Enter your choice (1-3): ");
+                int user = scanner.nextInt();
+                scanner.nextLine();
+
+                System.out.print("Enter username: ");
+                String username = scanner.nextLine();
+                System.out.print("Enter password: ");
+                String password = scanner.nextLine();
+
+                switch (user) {
+                    case 1:
+                        studentLogin(username, password);
+                        break;
+                    case 2:
+                        professorLogin(username, password);
+                        break;
+                    case 3:
+                        adminLogin(username, password);
+                        break;
+                    default:
+                        System.out.println("Invalid user type. Please try again.");
+                }
+            } else if (choice == 2) {
+                signup();
+            } else if (choice == 3) {
                 exitScreen();
-            }
-
-            if (choice < 1 || choice > 3) {
+            } else {
                 System.out.println("Invalid choice. Please try again.");
-                printFooter();
                 continue;
             }
-
-            System.out.print("Enter username: ");
-            String username = scanner.nextLine();
-            System.out.print("Enter password: ");
-            String password = scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    loginStudent(username, password);
-                    break;
-                case 2:
-                    loginProfessor(username, password);
-                    break;
-                case 3:
-                    loginAdmin(username, password);
-                    break;
-            }
-
-            printFooter();
         }
     }
 
-    public static void loginStudent(String username, String password) {
+    public static void signup() {
+        printHeader("Signup");
+        System.out.println("Select user type:");
+        System.out.println("1. Student");
+        System.out.println("2. Professor");
+        System.out.print("Enter your choice (1-2): ");
+        int userType = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter first name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        if (userType == 1) {
+            students.add(new Student(firstName, lastName, email, password));
+            System.out.println("Congratulations! Your student account has been created successfully. You may now proceed to log in.");
+        } else if (userType == 2) {
+            professors.add(new Professor(firstName, lastName, email, password));
+            System.out.println("Congratulations! Your professor account has been created successfully. You may now proceed to log in.");
+        } else {
+            System.out.println("Invalid user type. Signup failed.");
+        }
+    }
+
+    public static void studentLogin(String username, String password) {
         for (Student student : students) {
             if (student.getEmail().equals(username) && student.getPassword().equals(password)) {
                 studentMenu(student);
@@ -188,11 +242,10 @@ public class Props {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-            printFooter();
         }
     }
 
-    public static void loginProfessor(String username, String password) {
+    public static void professorLogin(String username, String password) {
         for (Professor professor : professors) {
             if (professor.getEmail().equals(username) && professor.getPassword().equals(password)) {
                 professorMenu(professor);
@@ -225,11 +278,10 @@ public class Props {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-            printFooter();
         }
     }
 
-    public static void loginAdmin(String username, String password) {
+    public static void adminLogin(String username, String password) {
         for (Admin admin : admins) {
             if (admin.getEmail().equals(username) && admin.getPassword().equals(password)) {
                 adminMenu(admin);
@@ -278,23 +330,6 @@ public class Props {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-            printFooter();
         }
-    }
-
-    public static void addComplaint(Complaint complaint) {
-        complaints.add(complaint);
-    }
-
-    public static ArrayList<Complaint> getComplaints() {
-        return complaints;
-    }
-
-    public static ArrayList<String> getComplaintsList() {
-        ArrayList<String> complaintsList = new ArrayList<>();
-        for (Complaint complaint : complaints) {
-            complaintsList.add(complaint.toString());
-        }
-        return complaintsList;
     }
 }
