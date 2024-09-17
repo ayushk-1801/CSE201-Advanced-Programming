@@ -139,6 +139,27 @@ public class Student extends User implements StudentInterface {
     }
 
     private boolean meetsPrerequisites(Course course) {
+        ArrayList<Course> prerequisites = course.getPrerequisites();
+        if (prerequisites == null || prerequisites.isEmpty()) {
+            return true;
+        }
+        
+        for (Course prerequisite : prerequisites) {
+            boolean found = false;
+            for (Course registeredCourse : registeredCourses) {
+                if (registeredCourse.getCourseCode().equals(prerequisite.getCourseCode())) {
+                    String grade = registeredCourse.getGrade(this);
+                    if (grade == null || grade.equals("F")) {
+                        return false;
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -154,9 +175,83 @@ public class Student extends User implements StudentInterface {
     @Override
     public void viewAcademicProgress() {
         Props.printHeader("Academic Progress");
-        System.out.println("CGPA: " + cgpa);
+        
+        double calculatedCGPA = calculateCGPA();
+        this.cgpa = calculatedCGPA;
+        
+        System.out.println("CGPA: " + String.format("%.2f", cgpa));
         System.out.println("Total Credits: " + totalCredits);
+        System.out.println("Current Semester: " + semester);
+        
+        System.out.println("\nCourses and Grades:");
+        System.out.println("+----------------+-------------------------------------+-------+");
+        System.out.println("| Course Code    | Course Name                         | Grade |");
+        System.out.println("+----------------+-------------------------------------+-------+");
+        
+        for (Course course : registeredCourses) {
+            String grade = course.getGrade(this);
+            if (grade == null) grade = "N/A";
+            System.out.printf("| %-14s | %-35s | %-5s |\n", 
+                course.getCourseCode(), 
+                course.getCourseName(), 
+                grade);
+        }
+        
+        System.out.println("+----------------+-------------------------------------+-------+");
+        
+        double sgpa = calculateSGPA();
+        System.out.printf("\nCurrent Semester GPA: %.2f\n", sgpa);
+        
         Props.printFooter();
+    }
+    
+    private double calculateSGPA() {
+        double totalGradePoints = 0;
+        int totalCredits = 0;
+        
+        for (Course course : registeredCourses) {
+            String grade = course.getGrade(this);
+            if (grade != null && !grade.equals("N/A")) {
+                double gradePoint = convertGradeToPoint(grade);
+                totalGradePoints += gradePoint * course.getCredits();
+                totalCredits += course.getCredits();
+            }
+        }
+        
+        return totalCredits > 0 ? totalGradePoints / totalCredits : 0;
+    }
+
+    private double calculateCGPA() {
+        double totalGradePoints = 0;
+        int totalCredits = 0;
+        
+        for (Course course : registeredCourses) {
+            String grade = course.getGrade(this);
+            if (grade != null && !grade.equals("N/A")) {
+                double gradePoint = convertGradeToPoint(grade);
+                totalGradePoints += gradePoint * course.getCredits();
+                totalCredits += course.getCredits();
+            }
+        }
+        
+        return totalCredits > 0 ? totalGradePoints / totalCredits : 0;
+    }
+    
+    private double convertGradeToPoint(String grade) {
+        switch (grade) {
+            case "A+": return 10.0;
+            case "A": return 9.0;
+            case "A-": return 8.0;
+            case "B+": return 7.0;
+            case "B": return 6.0;
+            case "B-": return 5.0;
+            case "C+": return 4.0;
+            case "C": return 3.0;
+            case "D": return 2.0;
+            case "E": return 1.0;
+            case "F": return 0.0;
+            default: return 0.0;
+        }
     }
 
     @Override

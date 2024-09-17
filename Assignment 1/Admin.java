@@ -28,7 +28,14 @@ abstract class AdminUser {
     }
 }
 
-public class Admin extends AdminUser {
+interface AdminInterface {
+    void manageCoursesCatalog();
+    void manageStudentRecords();
+    void assignProfessorToCourse();
+    void handleComplaints();
+}
+
+public class Admin extends AdminUser implements AdminInterface {
     private ArrayList<Course> courseCatalog;
     private Scanner scanner;
 
@@ -254,6 +261,7 @@ public class Admin extends AdminUser {
 
         if (professor != null && course != null) {
             course.setAssignedProfessor(professor.getEmail());
+            professor.addAssignedCourse(course);
             System.out.println("Professor assigned to course successfully.");
         } else {
             System.out.println("Professor or course not found.");
@@ -280,10 +288,10 @@ public class Admin extends AdminUser {
                     complaint.getStatus());
             }
             System.out.println("+----+------------------------------------------------------------------+----------+");
-            System.out.print("Enter complaint number to handle (or 'exit' to return): ");
+            System.out.print("Enter complaint number to handle (or '0' to return): ");
             String input = scanner.nextLine();
 
-            if (input.equalsIgnoreCase("exit")) {
+            if (input.equals("0")) {
                 break;
             }
 
@@ -291,7 +299,7 @@ public class Admin extends AdminUser {
             try {
                 complaintNumber = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number or 'exit'.");
+                System.out.println("Invalid input. Please enter a number or '0'.");
                 continue;
             }
             if (complaintNumber > 0 && complaintNumber <= complaints.size()) {

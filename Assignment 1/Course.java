@@ -60,6 +60,10 @@ public class Course {
         return grades.get(student);
     }
 
+    public ArrayList<Course> getPrerequisites() {
+        return prerequisites;
+    }
+
     public void setAssignedProfessor(String assignedProfessor) {
         this.assignedProfessor = assignedProfessor;
     }
@@ -94,6 +98,10 @@ public class Course {
 
     public void dropStudent(Student student) {
         enrolledStudents.remove(student);
+    }
+
+    public void setPrerequisites(ArrayList<Course> prerequisites) {
+        this.prerequisites = prerequisites;
     }
 
     @Override

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class Props {
     public static ArrayList<Admin> admins = new ArrayList<Admin>();
@@ -128,8 +129,8 @@ public class Props {
             System.out.println("Select an option:");
             System.out.println("1. Login");
             System.out.println("2. Sign up");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice (1-3): ");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice (0-2): ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             clear();
@@ -140,12 +141,12 @@ public class Props {
                 System.out.println("1. Student");
                 System.out.println("2. Professor");
                 System.out.println("3. Admin");
-                System.out.println("4. Back");
-                System.out.print("Enter your choice (1-5): ");
+                System.out.println("0. Back");
+                System.out.print("Enter your choice (0-3): ");
                 int user = scanner.nextInt();
                 scanner.nextLine();
 
-                if (user == 4) {
+                if (user == 0) {
                     continue;
                 }
 
@@ -169,9 +170,7 @@ public class Props {
                 }
             } else if (choice == 2) {
                 signup();
-            } else if (choice == 3) {
-                continue;
-            } else if (choice == 4) {
+            } else if (choice == 0) {
                 exitScreen();
             } else {
                 System.out.println("Invalid choice. Please try again.");
@@ -185,12 +184,12 @@ public class Props {
         System.out.println("Select user type:");
         System.out.println("1. Student");
         System.out.println("2. Professor");
-        System.out.println("3. Back");
-        System.out.print("Enter your choice (1-3): ");
+        System.out.println("0. Back");
+        System.out.print("Enter your choice (0-2): ");
         int user = scanner.nextInt();
         scanner.nextLine();
 
-        if (user == 3) {
+        if (user == 0) {
             return;
         }
 
@@ -238,8 +237,8 @@ public class Props {
             System.out.println("4. View schedule");
             System.out.println("5. View academic progress");
             System.out.println("6. Submit a complaint");
-            System.out.println("7. Logout");
-            System.out.print("Enter your choice (1-7): ");
+            System.out.println("0. Logout");
+            System.out.print("Enter your choice (0-6): ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -263,7 +262,7 @@ public class Props {
                 case 6:
                     student.submitComplaint();
                     break;
-                case 7:
+                case 0:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -286,8 +285,9 @@ public class Props {
             printHeader("Professor Menu");
             System.out.println("1. Manage courses");
             System.out.println("2. View enrolled students");
-            System.out.println("3. Logout");
-            System.out.print("Enter your choice (1-3): ");
+            System.out.println("3. Grade student");
+            System.out.println("0. Logout");
+            System.out.print("Enter your choice (0-3): ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -300,6 +300,9 @@ public class Props {
                     professor.viewEnrolledStudents();
                     break;
                 case 3:
+                    professor.gradeStudent();
+                    break;
+                case 0:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -326,8 +329,8 @@ public class Props {
             System.out.println("4. Manage student records");
             System.out.println("5. Assign professor to course");
             System.out.println("6. Handle complaints");
-            System.out.println("7. Logout");
-            System.out.print("Enter your choice (1-7): ");
+            System.out.println("0. Logout");
+            System.out.print("Enter your choice (0-6): ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -351,7 +354,7 @@ public class Props {
                 case 6:
                     admin.handleComplaints();
                     break;
-                case 7:
+                case 0:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -400,5 +403,7 @@ public class Props {
         Props.courses.get(3).add(new Course("MTH210", "Discrete Structures", 4, "Ashish Kumar Pandey", 3));
         Props.courses.get(3).add(new Course("MTH203", "Multivariable Calculus", 4, "Sarthok Sirkar", 3));
         Props.courses.get(3).add(new Course("ECE250", "Signals and Systems", 4, "Anubha Gupta", 3));
+
+        Props.courses.get(2).get(0).setPrerequisites(new ArrayList<Course>(Arrays.asList(Props.courses.get(1).get(0))));
     }
 }
