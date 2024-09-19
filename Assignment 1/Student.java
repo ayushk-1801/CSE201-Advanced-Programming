@@ -88,21 +88,22 @@ public class Student extends User implements StudentInterface {
     public void viewAvailableCourses() {
         Props.printHeader("Available Courses");
 
-        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+");
-        System.out.println("| Course Code| Course Name                                          | Credits| Semester  | Professor        |");
-        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+");
+        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+------------------+");
+        System.out.println("| Course Code| Course Name                                          | Credits| Semester  | Professor        | Timings          |");
+        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+------------------+");
 
         ArrayList<Course> currentSemesterCourses = Props.getCourses().get(semester);
         for (Course course : currentSemesterCourses) {
-            System.out.printf("| %-10s | %-52s | %-6d | %-9d | %-16s |\n",
+            System.out.printf("| %-10s | %-52s | %-6d | %-9d | %-16s | %-16s |\n",
                 course.getCourseCode(),
                 course.getCourseName(),
                 course.getCredits(),
                 course.getSemester(),
-                course.getAssignedProfessor().split(" ")[0]);
+                course.getAssignedProfessor().split(" ")[0],
+                course.getTimings());
         }
 
-        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+");
+        System.out.println("+------------+------------------------------------------------------+--------+-----------+------------------+------------------+");
         Props.printFooter();
     }
 

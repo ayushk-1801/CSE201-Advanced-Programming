@@ -277,6 +277,26 @@ public class Admin extends AdminUser implements AdminInterface {
         }
 
         while (true) {
+            System.out.println("1. View all complaints");
+            System.out.println("2. Filter complaints");
+            System.out.println("0. Return to main menu");
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine();
+
+            if (choice.equals("0")) {
+                break;
+            } else if (choice.equals("1")) {
+                displayComplaints(complaints);
+            } else if (choice.equals("2")) {
+                filterComplaints(complaints);
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private void displayComplaints(ArrayList<Complaint> complaints) {
+        while (true) {
             System.out.println("+----+------------------------------------------------------------------+----------+");
             System.out.println("| ID | Complaint                                                        | Status   |");
             System.out.println("+----+------------------------------------------------------------------+----------+");
@@ -295,31 +315,48 @@ public class Admin extends AdminUser implements AdminInterface {
                 break;
             }
 
-            int complaintNumber;
-            try {
-                complaintNumber = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number or '0'.");
-                continue;
-            }
-            if (complaintNumber > 0 && complaintNumber <= complaints.size()) {
-                Complaint selectedComplaint = complaints.get(complaintNumber - 1);
-                System.out.println("Selected complaint: " + selectedComplaint.getComplaint());
-                System.out.print("Enter status (Pending/Resolved): ");
-                String status = scanner.nextLine();
-                selectedComplaint.setStatus(status);
-                System.out.println("Complaint status updated to: " + status);
-
-                if (status.equalsIgnoreCase("Resolved")) {
-                    complaints.remove(complaintNumber - 1);
-                    System.out.println("Complaint resolved and removed from the list.");
-                }
-            } else {
-                System.out.println("Invalid complaint number.");
-            }
-
-            System.out.println();
+            handleComplaint(complaints, input);
         }
+    }
+
+    private void filterComplaints(ArrayList<Complaint> complaints) {
+        System.out.print("Enter status to filter (Pending/Resolved): ");
+        String filterStatus = scanner.nextLine().trim().toLowerCase();
+        ArrayList<Complaint> filteredComplaints = new ArrayList<>();
+
+        for (Complaint complaint : complaints) {
+            if (complaint.getStatus().toLowerCase().equals(filterStatus)) {
+                filteredComplaints.add(complaint);
+            }
+        }
+
+        if (filteredComplaints.isEmpty()) {
+            System.out.println("No complaints found with status: " + filterStatus);
+        } else {
+            displayComplaints(filteredComplaints);
+        }
+    }
+
+    private void handleComplaint(ArrayList<Complaint> complaints, String input) {
+        int complaintNumber;
+        try {
+            complaintNumber = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number or '0'.");
+            return;
+        }
+        if (complaintNumber > 0 && complaintNumber <= complaints.size()) {
+            Complaint selectedComplaint = complaints.get(complaintNumber - 1);
+            System.out.println("Selected complaint: " + selectedComplaint.getComplaint());
+            System.out.print("Enter status (Pending/Resolved): ");
+            String status = scanner.nextLine();
+            selectedComplaint.setStatus(status);
+            System.out.println("Complaint status updated to: " + status);
+        } else {
+            System.out.println("Invalid complaint number.");
+        }
+
+        System.out.println();
     }
 
     private String truncate(String str, int maxLength) {

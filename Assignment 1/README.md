@@ -1,54 +1,94 @@
+# Course Registration System
 
-# University Course Registration System
+This is a Java-based Course Registration System that allows students, professors, and administrators to manage courses, enrollments, and academic records.
 
-## TODO List
+## How to Run
 
-### General Setup
-- [x] Set up the basic project structure
-- [x] Implement user authentication system (login/signup)
-- [x] Create a menu-driven interface for the application
+1. Ensure you have Java Development Kit (JDK) installed on your system.
+2. Compile all Java files in the project directory:
+   ```
+   javac *.java
+   ```
+3. Run the Main class:
+   ```
+   java Main
+   ```
+4. Follow the on-screen prompts to navigate through the system.
 
-### Student Functionalities
-- [x] Implement view available courses feature
-- [x] Develop course registration system
-  - [x] Include prerequisite checking
-  - [x] Implement semester selection
-  - [x] Enforce credit limit (20 credits)
-- [x] Create view schedule functionality
-- [x] Implement academic progress tracking
-  - [x] Calculate SGPA and CGPA
-- [x] Add course dropping feature
-- [x] Develop complaint submission system
+## Assumptions
 
-### Professor Functionalities
-- [x] Implement course management system
-  - [x] Allow updating course details (syllabus, timings, credits, etc.)
-- [x] Create view enrolled students feature
+1. The system is console-based and does not have a graphical user interface.
+2. Data is not persisted between runs; it's initialized with some sample data at startup.
+3. The academic year is divided into 8 semesters.
+4. Students can register for a maximum of 20 credits per semester.
+5. Grades are entered manually by professors and are not calculated automatically.
+6. The system does not handle concurrent users or transactions.
 
-### Administrator Functionalities
-- [x] Develop course catalog management system
-- [x] Implement student records management
-- [x] Create professor-to-course assignment feature
-- [x] Develop complaint handling system
+## OOP Concepts Applied
 
-### UML Diagram
-- [ ] Create UML diagram with proper notation
+1. **Encapsulation**:
+   - All classes use private fields with public getter and setter methods.
+   - Example: The `Student` class encapsulates student-specific data like CGPA and registered courses.
 
-### Documentation
-- [ ] Write README file explaining:
-  - [ ] How to run the code
-  - [ ] Assumptions made
-  - [ ] Application of OOP concepts
+2. **Inheritance**:
+   - `Student`, `Professor`, and `Admin` classes inherit from the `User` class.
+   - `Admin` extends `AdminUser` which is an abstract class.
 
-### Demonstration
-- [x] Prepare demonstration with:
-  - 3 students
-  - 2 professors
-  - 1 administrator
-  - 5 courses
+3. **Polymorphism**:
+   - Method overriding is used in subclasses. For example, `toString()` method is overridden in the `Course` class.
+   - Method overloading is used in constructors (e.g., `Student` class has a default constructor and a parameterized constructor).
 
-### Final Checks
-- [ ] Ensure all OOP concepts are applied effectively
-- [ ] Review code for plagiarism
-- [ ] Test all functionalities thoroughly
-- [ ] Prepare code for submission in required format
+4. **Abstraction**:
+   - Interfaces like `StudentInterface`, `ProfessorInterface`, and `AdminInterface` define abstract methods that are implemented by respective classes.
+   - The `AdminUser` abstract class provides a base for the `Admin` class.
+
+5. **Interfaces**:
+   - `StudentInterface`, `ProfessorInterface`, and `AdminInterface` define contracts for their respective classes.
+
+6. **Composition**:
+   - The `Props` class uses composition to manage collections of `Student`, `Professor`, `Admin`, `Course`, and `Complaint` objects.
+
+7. **Static Members**:
+   - The `Props` class uses static fields and methods to maintain global state and utility functions.
+
+8. **ArrayList and Other Collections**:
+   - `ArrayList` is used extensively to store collections of objects (e.g., courses, students, professors).
+
+9. **Exception Handling**:
+   - Try-catch blocks are used to handle potential exceptions, particularly when parsing user input.
+
+10. **Enums** (not explicitly used, but could be implemented for grades or course types).
+
+This project demonstrates a comprehensive application of core OOP principles in Java, providing a flexible and extensible system for course registration and management.
+
+## Features
+
+- User authentication (login/signup) for students, professors, and admins
+- Menu-driven interface for all user types
+- Student functionalities:
+  - View available courses
+  - Course registration with prerequisite checking
+  - View schedule
+  - Academic progress tracking (SGPA and CGPA calculation)
+  - Course dropping
+  - Complaint submission
+- Professor functionalities:
+  - Course management (update syllabus, timings)
+  - View enrolled students
+  - Grade students
+- Administrator functionalities:
+  - Course catalog management (add, remove, update courses)
+  - Student records management
+  - Assign professors to courses
+  - Handle student complaints
+
+## Project Structure
+
+- `Main.java`: Entry point of the application
+- `Props.java`: Static class for managing global properties and utility methods
+- `User.java`: Base class for all user types (not provided, but implied)
+- `Student.java`: Represents a student user and their functionalities
+- `Professor.java`: Represents a professor user and their functionalities
+- `Admin.java`: Represents an admin user and their functionalities
+- `Course.java`: Represents a course and its properties
+- `Complaint.java`: Represents a student complaint (not provided, but implied)
