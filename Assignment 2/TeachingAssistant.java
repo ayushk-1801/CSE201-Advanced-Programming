@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+interface TeachingAssistantInterface {
+    void viewEnrolledStudents();
+    void gradeStudent();
+}
+
 public class TeachingAssistant extends Student {
     private Course assignedCourse;
 
@@ -75,6 +80,7 @@ public class TeachingAssistant extends Student {
                 System.out.print("Enter new grade for " + student.getFirstName() + " " + student.getLastName() + ": ");
                 String grade = scanner.nextLine();
                 assignedCourse.setGrade(student, grade);
+                student.addCompletedCourse(this.assignedCourse);
                 System.out.println("Grade updated successfully.");
 
                 boolean allCoursesGraded = true;

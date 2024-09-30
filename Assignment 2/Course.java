@@ -27,8 +27,10 @@ public class Course {
         this.semester = semester;
         this.prerequisites = new ArrayList<>();
         this.enrolledStudents = new ArrayList<>();
+        this.teachingAssistants = new ArrayList<>();
         this.grades = new HashMap<>();
-        this.dropDeadline = LocalDate.of(2024, 9, 30);
+        this.dropDeadline = LocalDate.of(2024, 9, 3);
+        this.maxStudents = 1;
     }
 
     public String getCourseCode() {

@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="23645dd0-c664-40e1-8471-c46344bf7cec" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/CourseFullException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DropDeadlinePassedException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Feedback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/InvalidLoginException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/Feedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Props.java" beforeDir="false" afterPath="$PROJECT_DIR$/Props.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeachingAssistant.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeachingAssistant.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +107,10 @@
       <workItem from="1727512489891" duration="8975000" />
       <workItem from="1727533427650" duration="1160000" />
       <workItem from="1727547049965" duration="3946000" />
-      <workItem from="1727593792123" duration="3073000" />
+      <workItem from="1727593792123" duration="3721000" />
+      <workItem from="1727616726082" duration="1270000" />
+      <workItem from="1727676466058" duration="1091000" />
+      <workItem from="1727706522058" duration="6015000" />
     </task>
     <servers />
   </component>

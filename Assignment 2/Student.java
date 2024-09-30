@@ -48,6 +48,7 @@ public class Student extends User implements StudentInterface {
     public Student() {
         super();
         this.registeredCourses = new ArrayList<>();
+        this.completedCourses = new ArrayList<>();
         this.cgpa = 0.0;
         this.totalCredits = 0;
         this.scanner = new Scanner(System.in);
@@ -56,6 +57,7 @@ public class Student extends User implements StudentInterface {
 
     public Student(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
+        this.completedCourses = new ArrayList<>();
         this.registeredCourses = new ArrayList<>();
         this.cgpa = 0.0;
         this.totalCredits = 0;
@@ -335,6 +337,10 @@ public class Student extends User implements StudentInterface {
         Props.printFooter();
     }
 
+    public ArrayList<Course> getCompletedCourses() {
+        return completedCourses;
+    }
+
     @Override
     public void addCompletedCourse(Course course) {
         if (completedCourses == null) {
@@ -348,12 +354,12 @@ public class Student extends User implements StudentInterface {
         Scanner scanner = new Scanner(System.in);
         Props.printHeader("Submit Feedback");
 
-        System.out.print("Enter course name to give feedback: ");
-        String courseName = scanner.nextLine();
+        System.out.print("Enter course code to give feedback: ");
+        String courseCode = scanner.nextLine();
 
         Course completedCourse = null;
         for (Course course : this.completedCourses) {
-            if (course.getCourseName().equalsIgnoreCase(courseName) && course.getGrade(this) != null) {
+            if (course.getCourseCode().equalsIgnoreCase(courseCode) && course.getGrade(this) != null) {
                 completedCourse = course;
                 break;
             }
@@ -379,6 +385,5 @@ public class Student extends User implements StudentInterface {
 
         System.out.println("Feedback submitted successfully.");
         Props.printFooter();
-        Props.clear();
     }
 }

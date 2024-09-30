@@ -1,6 +1,7 @@
 # Course Registration System
 
-This is a Java-based Course Registration System that allows students, professors, and administrators to manage courses, enrollments, and academic records.
+This is a Java-based Course Registration System that allows students, professors, and administrators to manage courses,
+enrollments, and academic records.
 
 ## How to Run
 
@@ -15,80 +16,78 @@ This is a Java-based Course Registration System that allows students, professors
    ```
 4. Follow the on-screen prompts to navigate through the system.
 
-## Assumptions
+## Overview
 
-1. The system is console-based and does not have a graphical user interface.
-2. Data is not persisted between runs; it's initialized with some sample data at startup.
-3. The academic year is divided into 8 semesters.
-4. Students can register for a maximum of 20 credits per semester.
-5. Grades are entered manually by professors and are not calculated automatically.
-6. The system does not handle concurrent users or transactions.
-
-## OOP Concepts Applied
-
-1. **Encapsulation**:
-   - All classes use private fields with public getter and setter methods.
-   - Example: The `Student` class encapsulates student-specific data like CGPA and registered courses.
-
-2. **Inheritance**:
-   - `Student`, `Professor`, and `Admin` classes inherit from the `User` class.
-   - `Admin` extends `AdminUser` which is an abstract class.
-
-3. **Polymorphism**:
-   - Method overriding is used in subclasses. For example, `toString()` method is overridden in the `Course` class.
-   - Method overloading is used in constructors (e.g., `Student` class has a default constructor and a parameterized constructor).
-
-4. **Abstraction**:
-   - Interfaces like `StudentInterface`, `ProfessorInterface`, and `AdminInterface` define abstract methods that are implemented by respective classes.
-   - The `AdminUser` abstract class provides a base for the `Admin` class.
-
-5. **Interfaces**:
-   - `StudentInterface`, `ProfessorInterface`, and `AdminInterface` define contracts for their respective classes.
-
-6. **Composition**:
-   - The `Props` class uses composition to manage collections of `Student`, `Professor`, `Admin`, `Course`, and `Complaint` objects.
-
-7. **Static Members**:
-   - The `Props` class uses static fields and methods to maintain global state and utility functions.
-
-8. **ArrayList and Other Collections**:
-   - `ArrayList` is used extensively to store collections of objects (e.g., courses, students, professors).
-
-9. **Exception Handling**:
-   - Try-catch blocks are used to handle potential exceptions, particularly when parsing user input.
-
-10. **Enums** (not explicitly used, but could be implemented for grades or course types).
-
-This project demonstrates a comprehensive application of core OOP principles in Java, providing a flexible and extensible system for course registration and management.
+This project is a Course Management System that allows students, teaching assistants, professors, and administrators to
+manage courses, grades, and feedback. The system is designed using object-oriented principles, generic programming, and
+exception handling to ensure robustness and flexibility.
 
 ## Features
 
-- User authentication (login/signup) for students, professors, and admins
-- Menu-driven interface for all user types
-- Student functionalities:
-  - View available courses
-  - Course registration with prerequisite checking
-  - View schedule
-  - Academic progress tracking (SGPA and CGPA calculation)
-  - Course dropping
-  - Complaint submission
-- Professor functionalities:
-  - Course management (update syllabus, timings)
-  - View enrolled students
-  - Grade students
-- Administrator functionalities:
-  - Course catalog management (add, remove, update courses)
-  - Student records management
-  - Assign professors to courses
-  - Handle student complaints
+- **Student Management**: Students can register for courses, drop courses, view their schedule, and submit feedback.
+- **Teaching Assistant Management**: Teaching assistants can view enrolled students and grade them.
+- **Professor Management**: Professors can manage courses, view enrolled students, grade students, and view feedback.
+- **Admin Management**: Admins can add/remove courses, manage student records, assign professors and TAs to courses, and
+  handle complaints.
 
-## Project Structure
+## Object Classes
 
-- `Main.java`: Entry point of the application
-- `Props.java`: Static class for managing global properties and utility methods
-- `User.java`: Base class for all user types (not provided, but implied)
-- `Student.java`: Represents a student user and their functionalities
-- `Professor.java`: Represents a professor user and their functionalities
-- `Admin.java`: Represents an admin user and their functionalities
-- `Course.java`: Represents a course and its properties
-- `Complaint.java`: Represents a student complaint (not provided, but implied)
+The system is built using several object classes to represent different entities:
+
+- **User**: A base class for all users (students, professors, TAs, and admins).
+- **Student**: Inherits from `User` and includes methods for course registration, dropping courses, and viewing
+  schedules.
+- **TeachingAssistant**: Inherits from `Student` and includes additional methods for viewing enrolled students and
+  grading them.
+- **Professor**: Inherits from `User` and includes methods for managing courses, viewing students, grading, and viewing
+  feedback.
+- **Admin**: Inherits from `AdminUser` and includes methods for managing courses, student records, and handling
+  complaints.
+- **Course**: Represents a course with attributes like course code, name, credits, and enrolled students.
+- **Feedback**: A generic class to handle feedback from students.
+
+## Generic Programming
+
+Generic programming is used in the `Feedback` class to allow feedback of any type:
+
+```java
+public class Feedback<V> {
+    private V feedback;
+    private String studentEmail;
+
+    public Feedback(V feedback, String studentEmail) {
+        this.feedback = feedback;
+        this.studentEmail = studentEmail;
+    }
+
+    public V getFeedback() {
+        return feedback;
+    }
+
+    public String getStudentEmail() {
+        return studentEmail;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("| %-30s | %-50s |", studentEmail, feedback.toString());
+    }
+}
+```
+
+## Exception Handling
+
+The system includes exception handling to ensure that the program does not crash due to unexpected inputs or errors. For
+example, the `Course` class includes methods to handle exceptions when adding or removing students:
+
+```java
+public static void adminLogin(String username, String password) throws InvalidLoginException {
+    for (Admin admin : admins) {
+        if (admin.getEmail().equals(username) && admin.getPassword().equals(password)) {
+            adminMenu(admin);
+            return;
+        }
+    }
+    throw new InvalidLoginException("Invalid credentials. Please try again.");
+}
+```

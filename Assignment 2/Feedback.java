@@ -1,13 +1,13 @@
-public class Feedback<T> {
-    private T feedback;
+public class Feedback<V> {
+    private V feedback;
     private String studentEmail;
 
-    public Feedback(T feedback, String studentEmail) {
+    public Feedback(V feedback, String studentEmail) {
         this.feedback = feedback;
         this.studentEmail = studentEmail;
     }
 
-    public T getFeedback() {
+    public V getFeedback() {
         return feedback;
     }
 
