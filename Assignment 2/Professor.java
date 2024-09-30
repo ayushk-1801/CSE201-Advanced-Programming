@@ -289,7 +289,7 @@ public class Professor extends User implements ProfessorInterface {
     }
 
     @Override
-    public void assignTeachingAssistant(){
+    public void assignTeachingAssistant() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             Props.printHeader("Assign Teaching Assistant");

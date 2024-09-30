@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 interface TeachingAssistantInterface {
     void viewEnrolledStudents();
+
     void gradeStudent();
 }
 

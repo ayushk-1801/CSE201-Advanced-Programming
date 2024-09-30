@@ -5,7 +5,9 @@ abstract class AdminUser {
     protected String email;
     protected String password;
 
-    public AdminUser() {}
+    public AdminUser() {
+    }
+
     public AdminUser(String email, String password) {
         this.email = email;
         this.password = password;
@@ -30,10 +32,15 @@ abstract class AdminUser {
 
 interface AdminInterface {
     void manageCoursesCatalog();
+
     void manageStudentRecords();
+
     void assignProfessorToCourse();
+
     void handleComplaints();
+
     void viewFeedback();
+
     void assignTeachingAssistant();
 }
 
@@ -304,10 +311,10 @@ public class Admin extends AdminUser implements AdminInterface {
             System.out.println("+----+------------------------------------------------------------------+----------+");
             for (int i = 0; i < complaints.size(); i++) {
                 Complaint complaint = complaints.get(i);
-                System.out.printf("| %-2d | %-80s | %-8s |\n", 
-                    i + 1, 
-                    truncate(complaint.getComplaint(), 80), 
-                    complaint.getStatus());
+                System.out.printf("| %-2d | %-80s | %-8s |\n",
+                        i + 1,
+                        truncate(complaint.getComplaint(), 80),
+                        complaint.getStatus());
             }
             System.out.println("+----+------------------------------------------------------------------+----------+");
             System.out.print("Enter complaint number to handle (or '0' to return): ");
@@ -368,7 +375,7 @@ public class Admin extends AdminUser implements AdminInterface {
         return str.substring(0, maxLength - 3) + "...";
     }
 
-    public void viewFeedback(){
+    public void viewFeedback() {
         Props.printHeader("View Feedback");
         System.out.print("Enter course code: ");
         String courseCode = scanner.nextLine();
@@ -409,7 +416,7 @@ public class Admin extends AdminUser implements AdminInterface {
         }
     }
 
-    public void assignTeachingAssistant(){
+    public void assignTeachingAssistant() {
         Props.printHeader("Assign Teaching Assistant");
         System.out.print("Enter TA email: ");
         String taEmail = scanner.nextLine();

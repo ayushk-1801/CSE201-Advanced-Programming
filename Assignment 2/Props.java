@@ -136,68 +136,68 @@ public class Props {
     }
 
     public static void login() {
-    while (true) {
-        clear();
-        printHeader("Login/Signup");
-        System.out.println("Select an option:");
-        System.out.println("1. Login");
-        System.out.println("2. Sign up");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice (0-2): ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        if (choice == 1) {
+        while (true) {
             clear();
-            printHeader("Login");
-            System.out.println("Select user type:");
-            System.out.println("1. Student");
-            System.out.println("2. Teaching Assistant");
-            System.out.println("3. Professor");
-            System.out.println("4. Admin");
-            System.out.println("0. Back");
-            System.out.print("Enter your choice (0-4): ");
-            int user = scanner.nextInt();
+            printHeader("Login/Signup");
+            System.out.println("Select an option:");
+            System.out.println("1. Login");
+            System.out.println("2. Sign up");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice (0-2): ");
+            int choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (user == 0) {
-                continue;
-            }
+            if (choice == 1) {
+                clear();
+                printHeader("Login");
+                System.out.println("Select user type:");
+                System.out.println("1. Student");
+                System.out.println("2. Teaching Assistant");
+                System.out.println("3. Professor");
+                System.out.println("4. Admin");
+                System.out.println("0. Back");
+                System.out.print("Enter your choice (0-4): ");
+                int user = scanner.nextInt();
+                scanner.nextLine();
 
-            System.out.print("Enter username: ");
-            String username = scanner.nextLine();
-            System.out.print("Enter password: ");
-            String password = scanner.nextLine();
-
-            try {
-                switch (user) {
-                    case 1:
-                        studentLogin(username, password);
-                        break;
-                    case 2:
-                        teachingAssistantLogin(username, password);
-                        break;
-                    case 3:
-                        professorLogin(username, password);
-                        break;
-                    case 4:
-                        adminLogin(username, password);
-                        break;
-                    default:
-                        System.out.println("Invalid user type. Please try again.");
+                if (user == 0) {
+                    continue;
                 }
-            } catch (InvalidLoginException e) {
-                System.out.println(e.getMessage());
+
+                System.out.print("Enter username: ");
+                String username = scanner.nextLine();
+                System.out.print("Enter password: ");
+                String password = scanner.nextLine();
+
+                try {
+                    switch (user) {
+                        case 1:
+                            studentLogin(username, password);
+                            break;
+                        case 2:
+                            teachingAssistantLogin(username, password);
+                            break;
+                        case 3:
+                            professorLogin(username, password);
+                            break;
+                        case 4:
+                            adminLogin(username, password);
+                            break;
+                        default:
+                            System.out.println("Invalid user type. Please try again.");
+                    }
+                } catch (InvalidLoginException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (choice == 2) {
+                signup();
+            } else if (choice == 0) {
+                exitScreen();
+            } else {
+                System.out.println("Invalid choice. Please try again.");
             }
-        } else if (choice == 2) {
-            signup();
-        } else if (choice == 0) {
-            exitScreen();
-        } else {
-            System.out.println("Invalid choice. Please try again.");
         }
     }
-}
 
     public static void signup() {
         printHeader("Signup");
@@ -301,7 +301,7 @@ public class Props {
     }
 
     public static void teachingAssistantLogin(String username, String password) throws InvalidLoginException {
-        for(TeachingAssistant teachingAssistant : teachingAssistants) {
+        for (TeachingAssistant teachingAssistant : teachingAssistants) {
             if (teachingAssistant.getEmail().equals(username) && teachingAssistant.getPassword().equals(password)) {
                 teachingAssistantMenu(teachingAssistant);
                 return;
