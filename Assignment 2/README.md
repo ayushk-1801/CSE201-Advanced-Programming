@@ -93,7 +93,7 @@ public static void adminLogin(String username, String password) throws InvalidLo
 ```
 
 ## Demonstration
-![1](./images/1.png)
+![1](./.images/1.png)
 ![2](./.images/2.png)
 ![3](./.images/3.png)
 ![4](./.images/4.png)
@@ -108,5 +108,3 @@ public static void adminLogin(String username, String password) throws InvalidLo
 ![13](./.images/13.png)
 ![14](./.images/14.png)
 ![15](./.images/15.png)
-
-
