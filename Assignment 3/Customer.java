@@ -1,4 +1,5 @@
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Customer {
@@ -6,13 +7,16 @@ public class Customer {
     private String password;
     private String name;
     private boolean isVIP;
-    private List<Item> cart;
+    private ArrayList<Pair<Item, Integer>> cart;
+    private ArrayList<Pair<Order, Date>> orderHistory;
 
     public Customer(String username, String password, String name, boolean isVIP) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.isVIP = isVIP;
+        this.cart = new ArrayList<>();
+        this.orderHistory = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -80,7 +84,7 @@ public class Customer {
 
     public void viewAllItems() {
         System.out.println("All items:");
-        for (Item item : Database.items) {
+        for (Item item : DATABASE.menu) {
             System.out.println(item.getName() + " - " + item.getPrice());
         }
     }
@@ -90,7 +94,7 @@ public class Customer {
         System.out.println("Enter item name:");
         String name = scanner.nextLine();
         Item item = null;
-        for (Item i : Database.items) {
+        for (Item i : DATABASE.menu) {
             if (i.getName().equals(name)) {
                 item = i;
                 break;
@@ -109,8 +113,15 @@ public class Customer {
         System.out.println("Enter category:");
         String category = scanner.nextLine();
         System.out.println("Items in category " + category + ":");
-        for (Item item : Database.items) {
-            if (item.getCategory().equals(category)) {
+        Category c = null;
+        try {
+            c = Category.valueOf(category.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid category.");
+            return;
+        }
+        for (Item item : DATABASE.menu) {
+            if (item.getCategory().equals(c)) {
                 System.out.println(item.getName() + " - " + item.getPrice());
             }
         }
@@ -118,8 +129,8 @@ public class Customer {
 
     public void sortByPrice() {
         System.out.println("Items sorted by price:");
-        Database.items.sort((i1, i2) -> Double.compare(i1.getPrice(), i2.getPrice()));
-        for (Item item : Database.items) {
+        DATABASE.menu.sort((i1, i2) -> Double.compare(i1.getPrice(), i2.getPrice()));
+        for (Item item : DATABASE.menu) {
             System.out.println(item.getName() + " - " + item.getPrice());
         }
     }
@@ -160,22 +171,191 @@ public class Customer {
     }
 
     public void addToCart() {
-        // TODO
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter item name:");
+        String name = scanner.nextLine();
+        Item item = null;
+        for (Item i : DATABASE.menu) {
+            if (i.getName().equals(name)) {
+                item = i;
+                break;
+            }
+        }
+        if (item == null) {
+            System.out.println("Item not found.");
+            return;
+        }
+        System.out.println("Enter quantity:");
+        int quantity = scanner.nextInt();
+        cart.add(new Pair<>(item, quantity));
+        System.out.println("Item added to cart.");
     }
 
     public void modifyQuantities() {
-        // TODO
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter item name:");
+        String name = scanner.nextLine();
+        Pair<Item, Integer> itemPair = null;
+        for (Pair<Item, Integer> pair : cart) {
+            if (pair.getFirst().getName().equals(name)) {
+                itemPair = pair;
+                break;
+            }
+        }
+        if (itemPair == null) {
+            System.out.println("Item not found in cart.");
+            return;
+        }
+        System.out.println("Enter new quantity:");
+        int quantity = scanner.nextInt();
+        cart.remove(itemPair);
+        cart.add(new Pair<>(itemPair.getFirst(), quantity));
+        System.out.println("Quantity updated.");
+    }
 
     public void removeFromCart() {
-        // TODO
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter item name:");
+        String name = scanner.nextLine();
+        Pair<Item, Integer> itemPair = null;
+        for (Pair<Item, Integer> pair : cart) {
+            if (pair.getFirst().getName().equals(name)) {
+                itemPair = pair;
+                break;
+            }
+        }
+        if (itemPair == null) {
+            System.out.println("Item not found in cart.");
+            return;
+        }
+        cart.remove(itemPair);
+        System.out.println("Item removed from cart.");
     }
 
     public void viewTotal() {
-        // TODO
+        double total = 0;
+        for (Pair<Item, Integer> pair : cart) {
+            total += pair.getFirst().getPrice() * pair.getSecond();
+            System.out.println(pair.getFirst().getName() + " x" + pair.getSecond() + " - ₹" + pair.getFirst().getPrice() * pair.getSecond());
+        }
+        System.out.println("Total: ₹" + total);
     }
 
     public void checkout() {
-        // TODO
+        double total = 0;
+        for (Pair<Item, Integer> pair : cart) {
+            total += pair.getFirst().getPrice() * pair.getSecond();
+        }
+        System.out.println("Total: ₹" + total);
+        System.out.println("Enter any special requests:");
+        Scanner scanner = new Scanner(System.in);
+        String specialRequest = scanner.nextLine();
+        System.out.println("Checkout successful! Your order ID is " + Order.getOrderID());
+        Order newOrder = new Order(cart, Status.PENDING, specialRequest);
+        if (isVIP) {
+            DATABASE.orderQueue.addFirst(newOrder);
+        } else {
+            DATABASE.orderQueue.add(newOrder);
+        }
+        orderHistory.add(new Pair<>(newOrder, new Date()));
+        cart.clear();
+    }
+
+    public void orderTracking() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("1. View order status");
+            System.out.println("2. Cancel order");
+            System.out.println("3. Order history");
+            System.out.println("0. Go back");
+
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    viewOrderStatus();
+                    break;
+                case 2:
+                    cancelOrder();
+                    break;
+                case 3:
+                    viewOrderHistory();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    public void viewOrderStatus() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Enter order ID:");
+    int orderId = scanner.nextInt();
+    Order order = null;
+    for (Order o : DATABASE.orderQueue) {
+        if (o.getOrderID() == orderId) {
+            order = o;
+            break;
+        }
+    }
+    if (order == null) {
+        System.out.println("Order not found.");
+        return;
+    }
+    System.out.println("Order status: " + order.getStatus());
+}
+
+public void cancelOrder() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Enter order ID:");
+    int orderId = scanner.nextInt();
+    Pair<Order, Date> orderPair = null;
+    for (Order o : DATABASE.orderQueue) {
+        if (o.getOrderID() == orderId) {
+            orderPair = new Pair<>(o, new Date());
+            break;
+        }
+    }
+    if (orderPair == null) {
+        System.out.println("Order not found.");
+        return;
+    }
+    if (orderPair.getFirst().getStatus() != Status.PENDING) {
+        System.out.println("Only pending orders can be cancelled.");
+        return;
+    }
+    orderHistory.remove(orderPair);
+    System.out.println("Order cancelled.");
+}
+
+    public void viewOrderHistory() {
+        System.out.println("Order history:");
+        for (Pair<Order, Date> pair : orderHistory) {
+            System.out.println("Order placed on " + pair.getSecond() + ":");
+            for (Pair<Item, Integer> itemPair : pair.getFirst().getItem()) {
+                System.out.println(itemPair.getFirst().getName() + " x" + itemPair.getSecond());
+            }
+        }
+    }
+
+    public void itemReviews() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter item name:");
+        String name = scanner.nextLine();
+        Item item = null;
+        for (Item i : DATABASE.menu) {
+            if (i.getName().equals(name)) {
+                item = i;
+                break;
+            }
+        }
+        if (item == null) {
+            System.out.println("Item not found.");
+            return;
+        }
+        System.out.println("Enter your review:");
+        String review = scanner.nextLine();
+        System.out.println("Review submitted.");
     }
 }

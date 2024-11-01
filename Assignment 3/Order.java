@@ -1,22 +1,28 @@
+import java.util.ArrayList;
+
 public class Order {
-    private static int orderID = 1;
-    private Pair<Item, Integer> item;
+    private static int orderID = 0;
+    private int OrderID;
+    private ArrayList<Pair<Item, Integer>> item;
     private Status status;
     private String specialRequest;
+    private String review;
 
-    public Order(Item item, int quantity, String specialRequest) {
-        this.item = new Pair<>(item, quantity);
-        this.status = Status.PENDING;
+    public Order(ArrayList<Pair<Item, Integer>> item, Status status, String specialRequest) {
+        this.item = item;
+        this.status = status;
         this.specialRequest = specialRequest;
+        this.review = "";
+        this.OrderID = orderID;
         orderID++;
     }
 
-    public Pair<Item, Integer> getItem() {
-        return item;
+    public static int getOrderID() {
+        return orderID;
     }
 
-    public int getQuantity() {
-        return item.getSecond();
+    public ArrayList<Pair<Item, Integer>> getItem() {
+        return item;
     }
 
     public Status getStatus() {
@@ -27,8 +33,12 @@ public class Order {
         return specialRequest;
     }
 
-    public void setItem(Item item, int quantity) {
-        this.item = new Pair<>(item, quantity);
+    public String getReview() {
+        return review;
+    }
+
+    public void setItem(ArrayList<Pair<Item, Integer>> item) {
+        this.item = item;
     }
 
     public void setStatus(Status status) {
@@ -37,5 +47,9 @@ public class Order {
 
     public void setSpecialRequest(String specialRequest) {
         this.specialRequest = specialRequest;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
     }
 }

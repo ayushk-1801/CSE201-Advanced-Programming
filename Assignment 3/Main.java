@@ -1,16 +1,20 @@
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
+        main.init();
         main.run();
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("Welcome to Byte Me! Canteen System");
+            header("Welcome to Byte Me! Canteen System");
             System.out.println("1. Login as Admin");
             System.out.println("2. Login as Customer");
             System.out.println("3. Register as Customer");
@@ -38,13 +42,14 @@ public class Main {
     }
 
     private void adminLogin() {
+        header("Admin Login");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter admin username:");
         String username = scanner.nextLine();
         System.out.println("Enter admin password:");
         String password = scanner.nextLine();
 
-        if (Database.admin.getUsername().equals(username) && Database.admin.getPassword().equals(password)) {
+        if (DATABASE.admin.getUsername().equals(username) && DATABASE.admin.getPassword().equals(password)) {
             adminMenu();
         } else {
             System.out.println("Invalid admin credentials.");
@@ -52,13 +57,14 @@ public class Main {
     }
 
     private void customerLogin() {
+        header("Customer Login");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username:");
         String username = scanner.nextLine();
         System.out.println("Enter your password:");
         String password = scanner.nextLine();
 
-        Customer customer = Database.customers.stream()
+        Customer customer = DATABASE.customers.stream()
                 .filter(c -> c.getUsername().equals(username) && c.getPassword().equals(password))
                 .findFirst()
                 .orElse(null);
@@ -71,6 +77,7 @@ public class Main {
     }
 
     private void registerCustomer() {
+        header("Customer Registration");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username:");
         String username = scanner.nextLine();
@@ -82,14 +89,14 @@ public class Main {
         boolean isVIP = scanner.nextBoolean();
 
         Customer customer = new Customer(username, password, name, isVIP);
-        Database.customers.add(customer);
+        DATABASE.customers.add(customer);
         System.out.println("Customer registered successfully.");
     }
 
     private void adminMenu() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("Admin Menu");
+            header("Admin Menu");
             System.out.println("1. Add item");
             System.out.println("2. Remove item");
             System.out.println("3. Update item");
@@ -101,19 +108,19 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    Database.admin.addItem();
+                    DATABASE.admin.addItem();
                     break;
                 case 2:
-                    Database.admin.removeItem();
+                    DATABASE.admin.removeItem();
                     break;
                 case 3:
-                    Database.admin.updateItem();
+                    DATABASE.admin.updateItem();
                     break;
                 case 4:
-                    Database.admin.orderManagement();
+                    DATABASE.admin.orderManagement();
                     break;
                 case 5:
-                    Database.admin.reportGeneration();
+                    DATABASE.admin.reportGeneration();
                     break;
                 case 0:
                     return;
@@ -126,7 +133,7 @@ public class Main {
     private void customerMenu(Customer customer) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("Welcome, " + customer.getName());
+            header("Welcome, " + customer.getName());
             System.out.println("1. Browse items");
             System.out.println("2. Cart Operations");
             System.out.println("3. Order Tracking");
@@ -154,5 +161,30 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    public void init() {
+        DATABASE.admin = new Admin();
+        DATABASE.customers = new ArrayList<>();
+        DATABASE.menu = new ArrayList<>();
+        DATABASE.orderQueue = new LinkedList<>();
+        DATABASE.orderHistory = new ArrayList<>();
+
+        DATABASE.menu.add(new Item("Chicken Biryani", 100, Category.NON_VEG));
+        DATABASE.menu.add(new Item("Chicken Roll", 80, Category.ROLLS));
+        DATABASE.menu.add(new Item("Veg Roll", 40, Category.ROLLS));
+        DATABASE.menu.add(new Item("Tea", 10, Category.DRINK));
+
+        DATABASE.customers.add(new Customer("dev", "123", "Dev", false));
+        DATABASE.customers.add(new Customer("anant", "123", "Anant", false));
+        DATABASE.customers.add(new Customer("arhan", "123", "Arhan", true));
+    }
+
+    public static void header(String title) {
+        System.out.println(
+                "============================================================================================================");
+        System.out.println("                                                " + title);
+        System.out.println(
+                "============================================================================================================");
     }
 }

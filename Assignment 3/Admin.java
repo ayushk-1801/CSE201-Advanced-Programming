@@ -37,7 +37,7 @@ public class Admin {
             return;
         }
         Item item = new Item(name, price, category);
-        Database.items.add(item);
+        DATABASE.menu.add(item);
         System.out.println("Item added successfully!");
     }
 
@@ -46,7 +46,7 @@ public class Admin {
         System.out.println("Enter item name:");
         String name = scanner.nextLine();
         Item item = null;
-        for (Item i : Database.items) {
+        for (Item i : DATABASE.menu) {
             if (i.getName().equals(name)) {
                 item = i;
                 break;
@@ -56,7 +56,14 @@ public class Admin {
             System.out.println("Item not found.");
             return;
         }
-        Database.items.remove(item);
+        DATABASE.menu.remove(item);
+        for (Order order : DATABASE.orderQueue) {
+            for (Pair<Item, Integer> pair : order.getItem()) {
+                if (pair.getFirst().equals(item)) {
+                    order.setStatus(Status.DENIED);
+                }
+            }
+        }
         System.out.println("Item removed successfully!");
     }
 
@@ -65,7 +72,7 @@ public class Admin {
         System.out.println("Enter item name:");
         String name = scanner.nextLine();
         Item item = null;
-        for (Item i : Database.items) {
+        for (Item i : DATABASE.menu) {
             if (i.getName().equals(name)) {
                 item = i;
                 break;
@@ -97,7 +104,7 @@ public class Admin {
 
     public void orderManagement() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Order Management");
+        Main.header("Order Management");
         System.out.println("1. View pending orders");
         System.out.println("2. Update order status");
         System.out.println("3. Process refund");
@@ -128,100 +135,96 @@ public class Admin {
 
     public void viewPendingOrders() {
         System.out.println("Pending Orders:");
-        for (Order order : Database.orders) {
+        for (Order order : DATABASE.orderQueue) {
             if (order.getStatus() == Status.PENDING) {
-                System.out.println(order.getItem().getFirst().getName() + " x" + order.getQuantity());
+                System.out.println("Order ID: " + order.getOrderID());
+                for (Pair<Item, Integer> pair : order.getItem()) {
+                    System.out.println("Item: " + pair.getFirst().getName());
+                    System.out.println("Quantity: " + pair.getSecond());
+                }
+                System.out.println("Special Request: " + order.getSpecialRequest());
+                System.out.println();
             }
         }
     }
 
     public void updateOrderStatus() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter item name:");
-        String name = scanner.nextLine();
-        Item item = null;
-        for (Item i : Database.items) {
-            if (i.getName().equals(name)) {
-                item = i;
+        System.out.println("Enter order ID:");
+        int orderID = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        Order order = null;
+        for (Order o : DATABASE.orderQueue) {
+            if (o.getOrderID() == orderID) {
+                order = o;
                 break;
             }
         }
-        if (item == null) {
-            System.out.println("Item not found.");
+        if (order == null) {
+            System.out.println("Order not found.");
             return;
         }
-        System.out.println("Enter new status (PENDING, DELIVERED, CANCELLED):");
+        System.out.println("Enter new status (PENDING, PREPARED, DELIVERED, CANCELLED, DENIED):");
         String statusInput = scanner.nextLine();
         Status newStatus;
         try {
             newStatus = Status.valueOf(statusInput.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid status. Please enter either PENDING, DELIVERED, or CANCELLED.");
+            System.out.println("Invalid status.");
             return;
         }
-        for (Order order : Database.orders) {
-            if (order.getItem().getFirst().equals(item)) {
-                order.setStatus(newStatus);
-            }
+        order.setStatus(newStatus);
+        if (newStatus == Status.DELIVERED) {
+            DATABASE.orderQueue.remove(order);
+            DATABASE.orderHistory.add(order);
         }
         System.out.println("Order status updated successfully!");
     }
 
     public void processRefund() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter item name:");
-        String name = scanner.nextLine();
-        Item item = null;
-        for (Item i : Database.items) {
-            if (i.getName().equals(name)) {
-                item = i;
+        System.out.println("Enter order ID:");
+        int orderID = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        Order order = null;
+        for (Order o : DATABASE.orderQueue) {
+            if (o.getOrderID() == orderID) {
+                order = o;
                 break;
             }
         }
-        if (item == null) {
-            System.out.println("Item not found.");
+        if (order == null) {
+            System.out.println("Order not found.");
             return;
         }
-        for (Order order : Database.orders) {
-            if (order.getItem().getFirst().equals(item)) {
-                if (order.getStatus() == Status.DELIVERED) {
-                    System.out.println("Refund processed successfully!");
-                    Database.orders.remove(order);
-                    return;
-                } else {
-                    System.out.println("Refund can only be processed for delivered orders.");
-                    return;
-                }
-            }
+        if (order.getStatus() == Status.DELIVERED) {
+            DATABASE.orderQueue.remove(order);
+            System.out.println("Refund processed successfully!");
+        } else {
+            System.out.println("Refund can only be processed for delivered orders.");
         }
-        System.out.println("No order found for this item.");
     }
 
     public void handleSpecialRequests() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter item name:");
-        String name = scanner.nextLine();
-        Item item = null;
-        for (Item i : Database.items) {
-            if (i.getName().equals(name)) {
-                item = i;
+        System.out.println("Enter order ID:");
+        int orderID = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        Order order = null;
+        for (Order o : DATABASE.orderQueue) {
+            if (o.getOrderID() == orderID) {
+                order = o;
                 break;
             }
         }
-        if (item == null) {
-            System.out.println("Item not found.");
+        if (order == null) {
+            System.out.println("Order not found.");
             return;
         }
-        for (Order order : Database.orders) {
-            if (order.getItem().getFirst().equals(item)) {
-                System.out.println("Enter special request:");
-                String specialRequest = scanner.nextLine();
-                order.setSpecialRequest(specialRequest);
-                System.out.println("Special request handled successfully!");
-                return;
-            }
-        }
-        System.out.println("No order found for this item.");
+        System.out.println("Enter special request:");
+        String specialRequest = scanner.nextLine();
+        order.setSpecialRequest(specialRequest);
+        System.out.println("Special request handled successfully!");
     }
 
     public void reportGeneration() {
