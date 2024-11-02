@@ -1,7 +1,8 @@
 public enum Category {
-    FOOD,
-    VEG,
-    NON_VEG,
+    SNACKS,
     ROLLS,
-    DRINK
+    BURGERS,
+    RICE,
+    NOODLES,
+    DRINKS,
 }

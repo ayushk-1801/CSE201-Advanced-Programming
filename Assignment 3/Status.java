@@ -3,5 +3,6 @@ public enum Status {
     PREPARED,
     DELIVERED,
     CANCELLED,
+    REFUNDED,
     DENIED
 }

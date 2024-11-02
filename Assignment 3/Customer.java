@@ -54,6 +54,7 @@ public class Customer {
     public void browseItems() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            Main.header("Browse Items");
             System.out.println("1. View all items");
             System.out.println("2. Search item");
             System.out.println("3. Filter by category");
@@ -110,18 +111,20 @@ public class Customer {
 
     public void filterByCategory() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter category:");
-        String category = scanner.nextLine();
-        System.out.println("Items in category " + category + ":");
-        Category c = null;
-        try {
-            c = Category.valueOf(category.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        System.out.println("Select category:");
+        Category[] categories = Category.values();
+        for (int i = 0; i < categories.length; i++) {
+            System.out.println((i + 1) + ". " + categories[i]);
+        }
+        int categoryIndex = scanner.nextInt() - 1;
+        if (categoryIndex < 0 || categoryIndex >= categories.length) {
             System.out.println("Invalid category.");
             return;
         }
+        Category selectedCategory = categories[categoryIndex];
+        System.out.println("Items in category " + selectedCategory + ":");
         for (Item item : DATABASE.menu) {
-            if (item.getCategory().equals(c)) {
+            if (item.getCategory().equals(selectedCategory)) {
                 System.out.println(item.getName() + " - " + item.getPrice());
             }
         }
@@ -138,6 +141,7 @@ public class Customer {
     public void cartOperations() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            Main.header("Cart Operations");
             System.out.println("1. Add to cart");
             System.out.println("2. Modify quantities");
             System.out.println("3. Remove from cart");
@@ -250,8 +254,8 @@ public class Customer {
         System.out.println("Enter any special requests:");
         Scanner scanner = new Scanner(System.in);
         String specialRequest = scanner.nextLine();
-        System.out.println("Checkout successful! Your order ID is " + Order.getOrderID());
         Order newOrder = new Order(cart, Status.PENDING, specialRequest);
+        System.out.println("Checkout successful! Your order ID is " + newOrder.getOrderID());
         if (isVIP) {
             DATABASE.orderQueue.addFirst(newOrder);
         } else {
@@ -264,6 +268,7 @@ public class Customer {
     public void orderTracking() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            Main.header("Order Tracking");
             System.out.println("1. View order status");
             System.out.println("2. Cancel order");
             System.out.println("3. Order history");
@@ -289,54 +294,89 @@ public class Customer {
     }
 
     public void viewOrderStatus() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Enter order ID:");
-    int orderId = scanner.nextInt();
-    Order order = null;
-    for (Order o : DATABASE.orderQueue) {
-        if (o.getOrderID() == orderId) {
-            order = o;
-            break;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter order ID:");
+        int orderId = scanner.nextInt();
+        Order order = null;
+        for (Order o : DATABASE.orderQueue) {
+            if (o.getOrderID() == orderId) {
+                order = o;
+                break;
+            }
         }
+        if (order == null) {
+            System.out.println("Order not found.");
+            return;
+        }
+        System.out.println("Order status: " + order.getStatus());
     }
-    if (order == null) {
-        System.out.println("Order not found.");
-        return;
-    }
-    System.out.println("Order status: " + order.getStatus());
-}
 
-public void cancelOrder() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Enter order ID:");
-    int orderId = scanner.nextInt();
-    Pair<Order, Date> orderPair = null;
-    for (Order o : DATABASE.orderQueue) {
-        if (o.getOrderID() == orderId) {
-            orderPair = new Pair<>(o, new Date());
-            break;
+    public void cancelOrder() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter order ID:");
+        int orderId = scanner.nextInt();
+        Pair<Order, Date> orderPair = null;
+        for (Order o : DATABASE.orderQueue) {
+            if (o.getOrderID() == orderId) {
+                orderPair = new Pair<>(o, new Date());
+                break;
+            }
         }
+        if (orderPair == null) {
+            System.out.println("Order not found.");
+            return;
+        }
+        if (orderPair.getFirst().getStatus() != Status.PENDING) {
+            System.out.println("Only pending orders can be cancelled.");
+            return;
+        }
+        DATABASE.orderQueue.remove(orderPair);
+        orderPair.getFirst().setStatus(Status.CANCELLED);
+        System.out.println("Order cancelled.");
     }
-    if (orderPair == null) {
-        System.out.println("Order not found.");
-        return;
-    }
-    if (orderPair.getFirst().getStatus() != Status.PENDING) {
-        System.out.println("Only pending orders can be cancelled.");
-        return;
-    }
-    orderHistory.remove(orderPair);
-    System.out.println("Order cancelled.");
-}
 
     public void viewOrderHistory() {
         System.out.println("Order history:");
         for (Pair<Order, Date> pair : orderHistory) {
             System.out.println("Order placed on " + pair.getSecond() + ":");
+            System.out.println(pair);
             for (Pair<Item, Integer> itemPair : pair.getFirst().getItem()) {
+                System.out.println(itemPair);
                 System.out.println(itemPair.getFirst().getName() + " x" + itemPair.getSecond());
             }
         }
+
+        System.out.println("Reorder items?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        if (choice == 2) {
+            return;
+        }
+
+        System.out.println("Enter order ID:");
+        int orderId = scanner.nextInt();
+        Pair<Order, Date> orderPair = null;
+        for (Pair<Order, Date> pair : orderHistory) {
+            if (pair.getFirst().getOrderID() == orderId) {
+                orderPair = pair;
+                break;
+            }
+        }
+        if (orderPair == null) {
+            System.out.println("Order not found.");
+            return;
+        }
+        Order newOrder = new Order(orderPair.getFirst());
+        if (isVIP) {
+            DATABASE.orderQueue.addFirst(newOrder);
+        } else {
+            DATABASE.orderQueue.add(newOrder);
+        }
+        orderHistory.add(new Pair<>(newOrder, new Date()));
+        System.out.println("Order placed successfully! Your order ID is " + newOrder.getOrderID());
     }
 
     public void itemReviews() {

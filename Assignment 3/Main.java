@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -170,14 +169,23 @@ public class Main {
         DATABASE.orderQueue = new LinkedList<>();
         DATABASE.orderHistory = new ArrayList<>();
 
-        DATABASE.menu.add(new Item("Chicken Biryani", 100, Category.NON_VEG));
+        DATABASE.menu.add(new Item("Veg Biryani", 80, Category.RICE));
+        DATABASE.menu.add(new Item("Chicken Biryani", 100, Category.RICE));
         DATABASE.menu.add(new Item("Chicken Roll", 80, Category.ROLLS));
         DATABASE.menu.add(new Item("Veg Roll", 40, Category.ROLLS));
-        DATABASE.menu.add(new Item("Tea", 10, Category.DRINK));
+        DATABASE.menu.add(new Item("Samosa", 15, Category.SNACKS));
+        DATABASE.menu.add(new Item("Pakora", 20, Category.SNACKS));
+        DATABASE.menu.add(new Item("Veg Noodles", 50, Category.NOODLES));
+        DATABASE.menu.add(new Item("Chicken Noodles", 70, Category.NOODLES));
+        DATABASE.menu.add(new Item("Veg Burger", 40, Category.BURGERS));
+        DATABASE.menu.add(new Item("Chicken Burger", 60, Category.BURGERS));
+        DATABASE.menu.add(new Item("Tea", 10, Category.DRINKS));
+        DATABASE.menu.add(new Item("Coffee", 15, Category.DRINKS));
 
         DATABASE.customers.add(new Customer("dev", "123", "Dev", false));
         DATABASE.customers.add(new Customer("anant", "123", "Anant", false));
         DATABASE.customers.add(new Customer("arhan", "123", "Arhan", true));
+        DATABASE.customers.add(new Customer("anushk", "123", "Anushk", true));
     }
 
     public static void header(String title) {

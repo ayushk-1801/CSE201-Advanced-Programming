@@ -134,19 +134,19 @@ public class Admin {
     }
 
     public void viewPendingOrders() {
-        System.out.println("Pending Orders:");
-        for (Order order : DATABASE.orderQueue) {
-            if (order.getStatus() == Status.PENDING) {
-                System.out.println("Order ID: " + order.getOrderID());
-                for (Pair<Item, Integer> pair : order.getItem()) {
-                    System.out.println("Item: " + pair.getFirst().getName());
-                    System.out.println("Quantity: " + pair.getSecond());
-                }
-                System.out.println("Special Request: " + order.getSpecialRequest());
-                System.out.println();
+    System.out.println("Pending Orders:");
+    for (Order order : DATABASE.orderQueue) {
+        if (order.getStatus() == Status.PENDING) {
+            System.out.println("Order ID: " + order.getOrderID());
+            for (Pair<Item, Integer> pair : order.getItem()) {
+                System.out.println("Item: " + pair.getFirst().getName());
+                System.out.println("Quantity: " + pair.getSecond());
             }
+            System.out.println("Special Request: " + order.getSpecialRequest());
+            System.out.println();
         }
     }
+}
 
     public void updateOrderStatus() {
         Scanner scanner = new Scanner(System.in);
@@ -203,6 +203,7 @@ public class Admin {
         } else {
             System.out.println("Refund can only be processed for delivered orders.");
         }
+        order.setStatus(Status.REFUNDED);
     }
 
     public void handleSpecialRequests() {
@@ -228,6 +229,51 @@ public class Admin {
     }
 
     public void reportGeneration() {
-        // TODO
+        Main.header("Report Generation");
+        System.out.println("1. View order history");
+        System.out.println("2. View sales report");
+        System.out.println("0. Go back");
+        System.out.println("Enter your choice:");
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        switch (choice) {
+            case 1:
+                viewOrderHistory();
+                break;
+            case 2:
+                viewSalesReport();
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+        }
+    }
+
+    public void viewOrderHistory() {
+        System.out.println("Order History:");
+        for (Order order : DATABASE.orderHistory) {
+            System.out.println("Order ID: " + order.getOrderID());
+            for (Pair<Item, Integer> pair : order.getItem()) {
+                System.out.println("Item: " + pair.getFirst().getName());
+                System.out.println("Quantity: " + pair.getSecond());
+            }
+            System.out.println("Special Request: " + order.getSpecialRequest());
+            System.out.println("Status: " + order.getStatus());
+            System.out.println("Review: " + order.getReview());
+            System.out.println();
+        }
+    }
+
+    public void viewSalesReport() {
+        double totalSales = 0;
+        System.out.println("Sales Report:");
+        for (Order order : DATABASE.orderHistory) {
+            for (Pair<Item, Integer> pair : order.getItem()) {
+                totalSales += pair.getFirst().getPrice() * pair.getSecond();
+            }
+        }
+        System.out.println("Total Sales: ₹" + totalSales);
     }
 }
