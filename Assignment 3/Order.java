@@ -6,7 +6,7 @@ public class Order {
     private ArrayList<Pair<Item, Integer>> item;
     private Status status;
     private String specialRequest;
-    private String review;
+    private String deliveryDetails = "";
 
     public Order(Order order) {
         orderID++;
@@ -14,14 +14,12 @@ public class Order {
         this.item = new ArrayList<>(order.item);
         this.status = Status.PENDING;
         this.specialRequest = order.specialRequest;
-        this.review = order.review;
     }
 
     public Order(ArrayList<Pair<Item, Integer>> item, Status status, String specialRequest) {
         this.item = item;
         this.status = status;
         this.specialRequest = specialRequest;
-        this.review = "";
         orderID++;
         this.OrderID = orderID;
     }
@@ -42,8 +40,8 @@ public class Order {
         return specialRequest;
     }
 
-    public String getReview() {
-        return review;
+    public String getDeliveryDetails() {
+        return deliveryDetails;
     }
 
     public int setOrderID(int orderID) {
@@ -62,7 +60,28 @@ public class Order {
         this.specialRequest = specialRequest;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setDeliveryDetails(String deliveryDetails) {
+        this.deliveryDetails = deliveryDetails;
+    }
+
+    public void printOrder() {
+    System.out.println(String.format("%-20s %-10s", "Order ID:", OrderID));
+    System.out.println(String.format("%-20s %-10s", "Item", "Quantity"));
+    System.out.println("-------------------- ----------");
+    for (Pair<Item, Integer> pair : item) {
+        System.out.println(String.format("%-20s %-10d", pair.getFirst().getName(), pair.getSecond()));
+    }
+    System.out.println("-------------------- ----------");
+    System.out.println(String.format("%-20s %-10s", "Special Request:", specialRequest));
+    System.out.println(String.format("%-20s %-10s", "Status:", status));
+    System.out.println(String.format("%-20s %-10s", "Delivery Details:", deliveryDetails));
+}
+
+    @Override
+    public String toString() {
+        return "Order ID: " + OrderID + "\n" +
+                "Item: " + item.getFirst() + "\n" +
+                "Status: " + status + "\n" +
+                "Special Request: " + specialRequest + "\n";
     }
 }

@@ -1,6 +1,8 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-public class Admin {
+public class Admin implements AdminInterface {
     private String username = "admin";
     private String password = "password";
 
@@ -26,7 +28,7 @@ public class Admin {
         String name = scanner.nextLine();
         System.out.println("Enter item price:");
         double price = scanner.nextDouble();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         System.out.println("Enter item category:");
         String categoryInput = scanner.nextLine();
         Category category;
@@ -36,7 +38,10 @@ public class Admin {
             System.out.println("Invalid category. Please enter either FOOD or DRINK.");
             return;
         }
-        Item item = new Item(name, price, category);
+        System.out.println("Enter item availability:");
+        boolean isAvailable = scanner.nextBoolean();
+        scanner.nextLine();
+        Item item = new Item(name, price, category, isAvailable);
         DATABASE.menu.add(item);
         System.out.println("Item added successfully!");
     }
@@ -86,7 +91,7 @@ public class Admin {
         String newName = scanner.nextLine();
         System.out.println("Enter new item price:");
         double newPrice = scanner.nextDouble();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         System.out.println("Enter new item category:");
         String categoryInput = scanner.nextLine();
         Category newCategory;
@@ -96,9 +101,13 @@ public class Admin {
             System.out.println("Invalid category. Please enter either FOOD or DRINK.");
             return;
         }
+        System.out.println("Enter new item availability:");
+        boolean newAvailability = scanner.nextBoolean();
+        scanner.nextLine();
         item.setName(newName);
         item.setPrice(newPrice);
         item.setCategory(newCategory);
+        item.setIsAvailable(newAvailability);
         System.out.println("Item updated successfully!");
     }
 
@@ -108,11 +117,10 @@ public class Admin {
         System.out.println("1. View pending orders");
         System.out.println("2. Update order status");
         System.out.println("3. Process refund");
-        System.out.println("4. Handle special requests");
         System.out.println("0. Go back");
         System.out.println("Enter your choice:");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         switch (choice) {
             case 1:
                 viewPendingOrders();
@@ -123,9 +131,6 @@ public class Admin {
             case 3:
                 processRefund();
                 break;
-            case 4:
-                handleSpecialRequests();
-                break;
             case 0:
                 return;
             default:
@@ -134,25 +139,20 @@ public class Admin {
     }
 
     public void viewPendingOrders() {
-    System.out.println("Pending Orders:");
-    for (Order order : DATABASE.orderQueue) {
-        if (order.getStatus() == Status.PENDING) {
-            System.out.println("Order ID: " + order.getOrderID());
-            for (Pair<Item, Integer> pair : order.getItem()) {
-                System.out.println("Item: " + pair.getFirst().getName());
-                System.out.println("Quantity: " + pair.getSecond());
+        System.out.println("Pending Orders:");
+        for (Order order : DATABASE.orderQueue) {
+            if (order.getStatus() == Status.PENDING) {
+                order.printOrder();
+                System.out.println();
             }
-            System.out.println("Special Request: " + order.getSpecialRequest());
-            System.out.println();
         }
     }
-}
 
     public void updateOrderStatus() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter order ID:");
         int orderID = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         Order order = null;
         for (Order o : DATABASE.orderQueue) {
             if (o.getOrderID() == orderID) {
@@ -185,7 +185,7 @@ public class Admin {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter order ID:");
         int orderID = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         Order order = null;
         for (Order o : DATABASE.orderQueue) {
             if (o.getOrderID() == orderID) {
@@ -206,28 +206,6 @@ public class Admin {
         order.setStatus(Status.REFUNDED);
     }
 
-    public void handleSpecialRequests() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter order ID:");
-        int orderID = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-        Order order = null;
-        for (Order o : DATABASE.orderQueue) {
-            if (o.getOrderID() == orderID) {
-                order = o;
-                break;
-            }
-        }
-        if (order == null) {
-            System.out.println("Order not found.");
-            return;
-        }
-        System.out.println("Enter special request:");
-        String specialRequest = scanner.nextLine();
-        order.setSpecialRequest(specialRequest);
-        System.out.println("Special request handled successfully!");
-    }
-
     public void reportGeneration() {
         Main.header("Report Generation");
         System.out.println("1. View order history");
@@ -236,7 +214,7 @@ public class Admin {
         System.out.println("Enter your choice:");
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
         switch (choice) {
             case 1:
                 viewOrderHistory();
@@ -254,26 +232,31 @@ public class Admin {
     public void viewOrderHistory() {
         System.out.println("Order History:");
         for (Order order : DATABASE.orderHistory) {
-            System.out.println("Order ID: " + order.getOrderID());
-            for (Pair<Item, Integer> pair : order.getItem()) {
-                System.out.println("Item: " + pair.getFirst().getName());
-                System.out.println("Quantity: " + pair.getSecond());
-            }
-            System.out.println("Special Request: " + order.getSpecialRequest());
-            System.out.println("Status: " + order.getStatus());
-            System.out.println("Review: " + order.getReview());
+            order.printOrder();
             System.out.println();
         }
     }
 
     public void viewSalesReport() {
         double totalSales = 0;
+        int totalOrders = DATABASE.orderHistory.size();
+        Map<String, Integer> itemCount = new HashMap<>();
+
         System.out.println("Sales Report:");
         for (Order order : DATABASE.orderHistory) {
             for (Pair<Item, Integer> pair : order.getItem()) {
                 totalSales += pair.getFirst().getPrice() * pair.getSecond();
+                itemCount.put(pair.getFirst().getName(), itemCount.getOrDefault(pair.getFirst().getName(), 0) + pair.getSecond());
             }
         }
+
+        String mostSellingItem = itemCount.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("None");
+
         System.out.println("Total Sales: ₹" + totalSales);
+        System.out.println("Total Orders: " + totalOrders);
+        System.out.println("Most Selling Item: " + mostSellingItem);
     }
 }

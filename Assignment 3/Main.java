@@ -13,13 +13,13 @@ public class Main {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            header("Welcome to Byte Me! Canteen System");
+            header("Welcome to Byte Me!");
             System.out.println("1. Login as Admin");
             System.out.println("2. Login as Customer");
             System.out.println("3. Register as Customer");
             System.out.println("0. Exit");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -169,18 +169,18 @@ public class Main {
         DATABASE.orderQueue = new LinkedList<>();
         DATABASE.orderHistory = new ArrayList<>();
 
-        DATABASE.menu.add(new Item("Veg Biryani", 80, Category.RICE));
-        DATABASE.menu.add(new Item("Chicken Biryani", 100, Category.RICE));
-        DATABASE.menu.add(new Item("Chicken Roll", 80, Category.ROLLS));
-        DATABASE.menu.add(new Item("Veg Roll", 40, Category.ROLLS));
-        DATABASE.menu.add(new Item("Samosa", 15, Category.SNACKS));
-        DATABASE.menu.add(new Item("Pakora", 20, Category.SNACKS));
-        DATABASE.menu.add(new Item("Veg Noodles", 50, Category.NOODLES));
-        DATABASE.menu.add(new Item("Chicken Noodles", 70, Category.NOODLES));
-        DATABASE.menu.add(new Item("Veg Burger", 40, Category.BURGERS));
-        DATABASE.menu.add(new Item("Chicken Burger", 60, Category.BURGERS));
-        DATABASE.menu.add(new Item("Tea", 10, Category.DRINKS));
-        DATABASE.menu.add(new Item("Coffee", 15, Category.DRINKS));
+        DATABASE.menu.add(new Item("Veg Biryani", 80, Category.RICE, true));
+        DATABASE.menu.add(new Item("Chicken Biryani", 100, Category.RICE, true));
+        DATABASE.menu.add(new Item("Chicken Roll", 80, Category.ROLLS, true));
+        DATABASE.menu.add(new Item("Veg Roll", 40, Category.ROLLS, true));
+        DATABASE.menu.add(new Item("Samosa", 15, Category.SNACKS, true));
+        DATABASE.menu.add(new Item("Pakora", 20, Category.SNACKS, true));
+        DATABASE.menu.add(new Item("Veg Noodles", 50, Category.NOODLES, true));
+        DATABASE.menu.add(new Item("Chicken Noodles", 70, Category.NOODLES, true));
+        DATABASE.menu.add(new Item("Veg Burger", 40, Category.BURGERS, true));
+        DATABASE.menu.add(new Item("Chicken Burger", 60, Category.BURGERS, true));
+        DATABASE.menu.add(new Item("Tea", 10, Category.DRINKS, true));
+        DATABASE.menu.add(new Item("Coffee", 15, Category.DRINKS, true));
 
         DATABASE.customers.add(new Customer("dev", "123", "Dev", false));
         DATABASE.customers.add(new Customer("anant", "123", "Anant", false));

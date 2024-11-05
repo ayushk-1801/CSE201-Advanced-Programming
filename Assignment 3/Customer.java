@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-public class Customer {
+public class Customer implements CustomerInterface {
     private String username;
     private String password;
     private String name;
@@ -84,9 +84,10 @@ public class Customer {
     }
 
     public void viewAllItems() {
-        System.out.println("All items:");
+        System.out.println(String.format("%-20s %-10s %-15s", "Item Name", "Price", "Availability"));
+        System.out.println("-------------------- ---------- ---------------");
         for (Item item : DATABASE.menu) {
-            System.out.println(item.getName() + " - " + item.getPrice());
+            System.out.println(String.format("%-20s ₹%-10.2f %-15s", item.getName(), item.getPrice(), item.getIsAvailable() ? "Available" : "Not Available"));
         }
     }
 
@@ -105,8 +106,9 @@ public class Customer {
             System.out.println("Item not found.");
             return;
         }
-        System.out.println("Item found:");
-        System.out.println(item.getName() + " - " + item.getPrice());
+        System.out.println(String.format("%-20s %-10s %-15s", "Item Name", "Price", "Availability"));
+        System.out.println("-------------------- ---------- ---------------");
+        System.out.println(String.format("%-20s ₹%-10.2f %-15s", item.getName(), item.getPrice(), item.getIsAvailable() ? "Available" : "Not Available"));
     }
 
     public void filterByCategory() {
@@ -122,10 +124,11 @@ public class Customer {
             return;
         }
         Category selectedCategory = categories[categoryIndex];
-        System.out.println("Items in category " + selectedCategory + ":");
+        System.out.println(String.format("%-20s %-10s %-15s", "Item Name", "Price", "Availability"));
+        System.out.println("-------------------- ---------- ---------------");
         for (Item item : DATABASE.menu) {
             if (item.getCategory().equals(selectedCategory)) {
-                System.out.println(item.getName() + " - " + item.getPrice());
+                System.out.println(String.format("%-20s ₹%-10.2f %-15s", item.getName(), item.getPrice(), item.getIsAvailable() ? "Available" : "Not Available"));
             }
         }
     }
@@ -133,8 +136,10 @@ public class Customer {
     public void sortByPrice() {
         System.out.println("Items sorted by price:");
         DATABASE.menu.sort((i1, i2) -> Double.compare(i1.getPrice(), i2.getPrice()));
+        System.out.println(String.format("%-20s %-10s %-15s", "Item Name", "Price", "Availability"));
+        System.out.println("-------------------- ---------- ---------------");
         for (Item item : DATABASE.menu) {
-            System.out.println(item.getName() + " - " + item.getPrice());
+            System.out.println(String.format("%-20s ₹%-10.2f %-15s", item.getName(), item.getPrice(), item.getIsAvailable() ? "Available" : "Not Available"));
         }
     }
 
@@ -189,6 +194,10 @@ public class Customer {
             System.out.println("Item not found.");
             return;
         }
+        if (!item.getIsAvailable()) {
+            System.out.println("Item is not available.");
+            return;
+        }
         System.out.println("Enter quantity:");
         int quantity = scanner.nextInt();
         cart.add(new Pair<>(item, quantity));
@@ -238,11 +247,15 @@ public class Customer {
 
     public void viewTotal() {
         double total = 0;
+        System.out.println(String.format("%-20s %-10s %-10s", "Item Name", "Quantity", "Price"));
+        System.out.println("-------------------- ---------- ----------");
         for (Pair<Item, Integer> pair : cart) {
-            total += pair.getFirst().getPrice() * pair.getSecond();
-            System.out.println(pair.getFirst().getName() + " x" + pair.getSecond() + " - ₹" + pair.getFirst().getPrice() * pair.getSecond());
+            double itemTotal = pair.getFirst().getPrice() * pair.getSecond();
+            total += itemTotal;
+            System.out.println(String.format("%-20s %-10d ₹%-10.2f", pair.getFirst().getName(), pair.getSecond(), itemTotal));
         }
-        System.out.println("Total: ₹" + total);
+        System.out.println("-------------------- ---------- ----------");
+        System.out.println(String.format("%-20s %-10s ₹%-10.2f", "Total", "", total));
     }
 
     public void checkout() {
@@ -254,7 +267,11 @@ public class Customer {
         System.out.println("Enter any special requests:");
         Scanner scanner = new Scanner(System.in);
         String specialRequest = scanner.nextLine();
-        Order newOrder = new Order(cart, Status.PENDING, specialRequest);
+        System.out.println("Enter delivery details:");
+        String deliveryDetails = scanner.nextLine();
+        ArrayList<Pair<Item, Integer>> items = new ArrayList<>(cart);
+        Order newOrder = new Order(items, Status.PENDING, specialRequest);
+        newOrder.setDeliveryDetails(deliveryDetails);
         System.out.println("Checkout successful! Your order ID is " + newOrder.getOrderID());
         if (isVIP) {
             DATABASE.orderQueue.addFirst(newOrder);
@@ -308,7 +325,7 @@ public class Customer {
             System.out.println("Order not found.");
             return;
         }
-        System.out.println("Order status: " + order.getStatus());
+        order.printOrder();
     }
 
     public void cancelOrder() {
@@ -339,11 +356,7 @@ public class Customer {
         System.out.println("Order history:");
         for (Pair<Order, Date> pair : orderHistory) {
             System.out.println("Order placed on " + pair.getSecond() + ":");
-            System.out.println(pair);
-            for (Pair<Item, Integer> itemPair : pair.getFirst().getItem()) {
-                System.out.println(itemPair);
-                System.out.println(itemPair.getFirst().getName() + " x" + itemPair.getSecond());
-            }
+            pair.getFirst().printOrder();
         }
 
         System.out.println("Reorder items?");
