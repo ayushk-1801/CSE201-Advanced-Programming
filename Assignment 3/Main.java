@@ -180,7 +180,7 @@ public class Main {
         DATABASE.menu.add(new Item("Veg Burger", 40, Category.BURGERS, true));
         DATABASE.menu.add(new Item("Chicken Burger", 60, Category.BURGERS, true));
         DATABASE.menu.add(new Item("Tea", 10, Category.DRINKS, true));
-        DATABASE.menu.add(new Item("Coffee", 15, Category.DRINKS, true));
+        DATABASE.menu.add(new Item("Coffee", 15, Category.DRINKS, false));
 
         DATABASE.customers.add(new Customer("dev", "123", "Dev", false));
         DATABASE.customers.add(new Customer("anant", "123", "Anant", false));
